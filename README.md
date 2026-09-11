@@ -89,7 +89,7 @@ $$F_T\vert{}_{\mathcal{D}} : X \to Y$$
 
 The compiler factorizes this function into:
 
-$$F_T(X) = G(\mathcal{C}(X)) + \epsilon$$
+$$F_T(X) = \arg\max_j \left[ G_j(\mathcal{C}(X)) + \epsilon_j \right]$$
 
 where $\mathcal{C}(X)$ is a finite, sparse semantic instruction set, $G$ is a deterministic decision rule, and $\epsilon$ denotes the residual compilation error. Exposing the expert model to $(X, Y)$ during compilation is the foundational mechanism of introspection: it forces the expert to reveal the internal predicates required to justify $Y$ given $X$. Ground-truth answer keys are the input to the compiler, not an experimental vulnerability.
 
@@ -320,7 +320,7 @@ By structuring inferences as directed reasoning topologies, the kernel matches s
 
 ### 4.4 Inline Epistemic Firmware
 
-The compiled domain kernel acts as an inline **epistemic firmware** gating external LLM generation. Operating analogously to speculative execution in modern microprocessors, the probabilistic model functions as an unconstrained proposal engine proposing reasoning steps.
+The compiled domain kernel acts as an inline **epistemic firmware** gating external LLM generation. Operating analogously to speculative decoding, the probabilistic model functions as an unconstrained proposal engine proposing reasoning steps.
 
 The firmware sits directly in the decoding loop between candidate token generation and state commitment. As the LLM emits tokens representing an intermediate inference step, the firmware projects the step into candidate opcodes and validates the transition against the relational graph:
 
@@ -466,10 +466,10 @@ The empirical baseline was established on the California Consumer Privacy Act (C
 
 * **Corpus Scope and Reference Baselines:** The full C3PA corpus contains 37,284 annotated sentences across 399 documents. On this full corpus, reference standard baselines achieve:
 * TF-IDF + Logistic Regression: Accuracy = 0.7935, Macro-F1 = 0.7161
-* Fine-Tuned BERT: Accuracy = 0.8210, Macro-F1 = 0.7529
+* Fine-Tuned BERT: Accuracy = 0.8208, Macro-F1 = 0.7529
 
 
-* **The Idea-Mapped Population Subset:** Initial concept-induction experiments were conducted on a representative subset of 2,858 sentences across held-out document splits. On this specific subset, baseline linear performance drops to 0.6559 accuracy / 0.6581 macro-F1, reflecting an intentional concentration of structurally complex, multi-clause sentences.
+* **The Idea-Mapped Population Subset:** Initial concept-induction experiments were conducted on a representative subset of 2,858 sentences across held-out document splits. On this specific subset, baseline linear performance drops to 0.6559 accuracy / 0.6581 macro-F1—the subset is the idea-mapped portion of the corpus; lower baseline performance likely reflects both corpus composition and the subset's origin in the agent's coverage.
 * **Exp 2 (Teacher Ceiling):** Augmenting the baseline classifier with teacher-generated rationales consolidated into 8,706 concept ideas increased performance from 0.6559 to 0.7541 accuracy, and from 0.6581 to 0.7555 macro-F1 (+9.8 percentage points). This established that teacher rationales contain substantial, extractable task-relevant structure.
 * **Exp 3 (Compression of the Long Tail):** Removing singleton concepts collapsed the vocabulary from 8,706 down to 1,408 shared concepts (provisional to the initial C3PA consolidation run; an 83.8% reduction in vocabulary size and a reduction from 4.05 to 1.49 mean concepts per sample). Downstream accuracy shifted from 0.7541 to 0.7468, while macro-F1 moved marginally from 0.7555 to 0.7488. This confirmed that predictive utility is concentrated within a compact, recurring core instruction set.
 * **Exp 4 (The Phase 3 Discontinuity):** Training a naive linear model over TF-IDF features to predict the 1,408 shared concepts resulted in severe overfitting and generalization collapse:
