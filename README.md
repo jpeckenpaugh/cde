@@ -8,7 +8,7 @@ Yet every iteration ran into the same fundamental wall: **who verifies the verif
 
 Layering agents on top of agents to catch hallucinations, audit code, and enforce rules simply moves uncertainty around in a circle. Two models agreeing is evidence; it is not proof. When the verification gate is itself a stochastic token predictor, the system never truly leaves the probabilistic stack, remaining vulnerable to silent, compounding failure modes.
 
-To achieve deterministic operational integrity in high-stakes environments, verification cannot rely on continuous neural inference at runtime. The rules governing validity should exist outside the model entirely—as an explicit, deterministic, and inspectable substrate.
+To achieve deterministic operational integrity in high-stakes environments, verification cannot rely on continuous neural inference at runtime. The rules governing validity must exist outside the model entirely—as an explicit, deterministic, and inspectable substrate.
 
 The **Compiled Domain Expertise (CDE)** framework and the **Quantized Semantic Bottleneck Architecture (QSBA)** are designed around a different answer: severing knowledge acquisition from knowledge execution.
 
@@ -37,6 +37,25 @@ The structural hierarchy of this specification spans five distinct conceptual la
 * **Level 3: Architecture — Quantized Semantic Bottleneck Architecture (QSBA):** The structural hourglass topology separating high-dimensional, continuous linguistic interfaces from a discrete, quantized, language-agnostic core.
 * **Level 4: Artifact — Domain Instruction Set (DIS):** The deployable binary specification—a finite alphabet of integer opcodes, relational dependency graphs, and quantized transition weights executing on bare silicon.
 * **Level 5: Reference Instance — QSBC:** The historical reference implementation demonstrating the architecture on the California Consumer Privacy Act (C3PA) corpus.
+
+```mermaid
+graph TD
+    L1["LEVEL 1: THEORY\nCompiled Domain Expertise (CDE)\n<i>Thesis: Bounded expertise compiles to invariant, language-free instruction sets</i>"]
+    L2["LEVEL 2: METHOD\nEmpirical Knowledge Compilation (EKC)\n<i>Pipeline: Answer-key interrogation, canonicalization, tail ablation, static lowering</i>"]
+    L3["LEVEL 3: ARCHITECTURE\nQuantized Semantic Bottleneck Architecture (QSBA)\n<i>Topology: Decoupled hourglass separating continuous bulbs from discrete waist</i>"]
+    L4["LEVEL 4: RUNTIME ARTIFACT\nDomain Instruction Set (DIS)\n<i>Format: Static sub-megabyte binary, integer opcodes, categorical proof graph</i>"]
+    L5["LEVEL 5: REFERENCE INSTANCE\nQSBC (C3PA Implementation)\n<i>Proof-of-concept: 1,408 shared concepts across statutory privacy policies</i>"]
+
+    L1 --> L2
+    L2 --> L3
+    L3 --> L4
+    L4 --> L5
+
+    classDef default fill:#ffffff,stroke:#3f3f46,stroke-width:1.5px,color:#09090b;
+    classDef l4 fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a;
+    class L4 l4;
+
+```
 
 ---
 
@@ -98,6 +117,34 @@ The execution engine of the Quantized Semantic Bottleneck Architecture is struct
                                 /   \
                     BOTTOM BULB: OUTPUT TRANSDUCTION
           [ Explanatory Rendering & Structured Surface Output ]
+
+```
+
+```mermaid
+flowchart TD
+    subgraph BUILD["BUILD TIME: Empirical Knowledge Compilation (EKC)"]
+        direction TB
+        Corpus[("Closed Corpus (X, Y)\nGround Truth Key")] --> Teacher["Teacher Model\n(High-Capacity Frontier LLM)"]
+        Teacher --> Rationales["Introspective Rationales & Explanations"]
+        Rationales --> Inducer["Concept Inducer & Clustering Engine"]
+        Inducer --> Audits{"Compilation Audits\n- Entropy H(Y|C)\n- Saturation ΔK→0\n- Quantization Ladder"}
+        Audits -->|Pass| Lowering["Structural Lowering Engine\n(Pruning, Topology Typing, INT8 Calibration)"]
+    end
+
+    Lowering ==>|Emits Static Binary| DIS
+
+    subgraph RUNTIME["RUNTIME: Bare-Metal Execution (<1 MiB Budget Target)"]
+        direction TB
+        Input["Raw Input Text (X)"] --> Extractor["Phase 3 Static Extractor\n(Aho-Corasick / Decision Lists)"]
+        Extractor -->|Active Opcodes| DIS["Domain Instruction Set (DIS)\n- Relational Proof Graph\n- INT8 Decision Matrix\n- Integer Opcodes"]
+        DIS --> Kernel{"Deterministic CPU Kernel\n- Validate\n- Correlate\n- Discriminate"}
+        Kernel -->|Attributed State| Terminal["Terminal Decision (Y)\nExact Logit Decomposition"]
+        Kernel -.->|Out of Domain| Halt["Loud Syntax Halt / Rejection"]
+    end
+
+    style BUILD fill:#f4f4f5,stroke:#71717a,stroke-width:1px,stroke-dasharray: 5 5
+    style RUNTIME fill:#f0fdf4,stroke:#16a34a,stroke-width:2px
+    style DIS fill:#dbeafe,stroke:#2563eb,stroke-width:2px
 
 ```
 
@@ -253,6 +300,24 @@ By structuring inferences as directed reasoning topologies, the kernel matches s
 * **Paradox Signatures:** Identifiable sub-graph motifs where mutually exclusive contextual conditions ($C_a \land \neg C_a$) are simultaneously asserted to force a terminal state.
 * **Epistemic Viruses:** Propagating pathologies where an invalid intermediate opcode produces a locally viable terminal output, leading downstream systems to consume that output as a valid axiom and spreading the corruption across subsequent inferences.
 
+```
+               EPISTEMIC VIRUS: PROPAGATION OF UNCHECKED DEFECTS
+
+           [ Valid Premise X ]
+                   │
+                   ▼
+     ┌───────────────────────────┐
+     │ Corrupted Opcode C_k      │ ◄── [ Paradox Signature / Unlicensed Jump ]
+     └───────────────────────────┘
+                   │
+         ┌─────────┴─────────┐
+         ▼                   ▼
+    [ Outcome Y1 ]      [ Outcome Y2 ] ◄── (Propagates downstream as 
+     (Passes Spot        (Silently          valid premise, infecting
+        Check)            Corrupted)        subsequent inferences)
+
+```
+
 ### 4.4 Inline Epistemic Firmware
 
 The compiled domain kernel acts as an inline **epistemic firmware** gating external LLM generation. Operating analogously to speculative execution in modern microprocessors, the probabilistic model functions as an unconstrained proposal engine proposing reasoning steps.
@@ -263,36 +328,71 @@ $$\text{Evaluate}(C_{\text{proposed}} \mid \text{State}_{\text{runtime}}) \in \{
 
 If a proposed transition triggers a paradox signature or violates typed relations, the firmware raises an **epistemic interrupt**. The branch is halted, the LLM's active key-value cache is rolled back to the last certified graph checkpoint, and subsequent token generation is constrained to licensed outgoing edges.
 
+```mermaid
+sequenceDiagram
+    autonumber
+    participant LLM as Generative LLM (Proposal Engine)
+    participant FW as Epistemic Firmware (DIS Core)
+    participant Graph as Categorical Proof Graph
+    participant World as Certified State / Consumer
+
+    Note over LLM,World: Speculative Decoding Loop
+    LLM->>FW: Propose Token Chunk / Intermediate Step (X_step)
+    FW->>FW: Project step into Opcode Space (C_cand)
+    FW->>Graph: Validate Morphism Against Active State
+    
+    alt Morphism Valid (Typed & Path-Connected)
+        Graph-->>FW: Type Match OK (No Paradox Signature)
+        FW->>World: COMMIT: License step and output state
+        FW-->>LLM: Advance Decoding Checkpoint
+    else Structural Pathology Detected (Cycle / Contradiction)
+        Graph-->>FW: FAULT: Epistemic Violation (C_a ∧ ¬C_a)
+        FW-->>LLM: INTERRUPT: Prune candidate branch
+        FW->>LLM: ROLLBACK KV-Cache to last certified checkpoint
+        Note over LLM: Constrain generation to licensed graph edges
+    end
+
+```
+
 ---
 
 ## 5. The Sub-ISA Bedrock: The Universal Algebra of Reasoning
 
 Abstracting away specific domain instances leaves a universal, typed, compositional structure: the algebra of reasoning.
 
-```
-                                LAYER 4
-                     [ Multilingual Interfaces ]
-        Transduction between surface tokens and domain opcodes
-                                   ▲
-                                   │
-                                LAYER 3
-                     [ Categorical Proof Graph ]
-        Finitely presented fragment of a Cartesian closed category
-                                   ▲
-                                   │
-                                LAYER 2
-                        [ Domain-Specific ISA ]
-                 Named macro-compositions of combinators
-                                   ▲
-                                   │
-                                LAYER 1
-                     [ Combinators / Logic Gates ]
-               Primitive relational operations on boundaries
-                                   ▲
-                                   │
-                                LAYER 0
-                           [ Distinctions ]
-              The primordial cut: binary partition of a space
+```mermaid
+flowchart BT
+    subgraph L4["Layer 4: Linguistic Transducers"]
+        T_EN["English"] ~~~ T_ES["Spanish"] ~~~ T_ZH["Mandarin"]
+    end
+
+    subgraph L3["Layer 3: Categorical Proof Graph"]
+        CPG["Finitely Presented Fragment of a Cartesian Closed Category\nObjects = Types/Distinctions | Morphisms = Lawful Proofs"]
+    end
+
+    subgraph L2["Layer 2: Domain-Specific ISA"]
+        ISA["Domain Opcodes (ASSERT_RIGHT, INVERT_OPCODE)\nCompiled reusable macro-assemblies"]
+    end
+
+    subgraph L1["Layer 1: Combinators (Logic Gates)"]
+        G_ID["Identity (id)"] --- G_COMP["Composition (○)"] --- G_PAIR["Pairing (⟨f,g⟩)"]
+        G_CURR["Currying (Λ)"] --- G_EVAL["Eval"] --- G_NEG["Negation (¬)"]
+    end
+
+    subgraph L0["Layer 0: Distinctions (The Primordial Cut)"]
+        CUT["Boundary Partition: Cut(S) → {d, ¬d}"]
+    end
+
+    L0 --> L1
+    L1 --> L2
+    L2 --> L3
+    L3 --> L4
+
+    style L0 fill:#fafafa,stroke:#a1a1aa
+    style L1 fill:#f4f4f5,stroke:#71717a
+    style L2 fill:#e0f2fe,stroke:#0284c7
+    style L3 fill:#ede9fe,stroke:#7c3aed
+    style L4 fill:#fef2f2,stroke:#dc2626
 
 ```
 
@@ -362,24 +462,37 @@ $$\text{Train Recall@3: } 0.915 \quad \implies \quad \text{Test Recall@3: } 0.09
 
 Downstream classification driven by these predicted concepts fell to 0.6135 accuracy and 0.6142 macro-F1 (underperforming the concept-blind baseline of 0.6559 / 0.6581).
 
-```
-                          C3PA EXPERIMENTAL PROGRESSION
-    
-      Macro-F1
-        ▲
-  0.80 ─┼───────────────────────────────────────────┐
-        │                                           │ C_teacher Ceiling
-        │                                           │ (Exp 2: 0.7555)
-  0.75 ─┼───────────────────┐                       │ (Exp 3 Shared: 0.7488)
-        │                   │                       │
-  0.70 ─┼───────────────────┼───────────────────────┼─────────────────────────
-        │                   │                       │
-  0.65 ─┼─ Baseline TF-IDF  │                       │ Exp 4 Linear Student
-        │  (Exp 1: 0.6581)  │                       │ (Failed Recovery: 0.6142)
-  0.60 ─┼───────────────────┴───────────────────────┴─────────────────────────
-        │
-        └─────────────────────────────────────────────────────────────────────►
-                                                                   Experiments
+```mermaid
+flowchart LR
+    subgraph STAGE1["Stage 1: Ground Truth"]
+        E1["Exp 1: Baseline TF-IDF\nAcc: 0.6559 | F1: 0.6581\n<i>(Raw lexical features)</i>"]
+    end
+
+    subgraph STAGE2["Stage 2: Introspection & Upper Bound"]
+        E2["Exp 2: Teacher Rationales\nAcc: 0.7541 | F1: 0.7555\n<i>(+9.8 pt lift; 8,706 concepts)</i>"]
+    end
+
+    subgraph STAGE3["Stage 3: Tail Compression"]
+        E3["Exp 3: Shared Concept Core\nAcc: 0.7468 | F1: 0.7488\n<i>(84% tail pruned → 1,408 concepts)</i>"]
+    end
+
+    subgraph STAGE4["Stage 4: Naive Student Failure"]
+        E4["Exp 4: Linear Student (X → C)\nAcc: 0.6135 | F1: 0.6142\n<i>(Test Recall@3: 0.098 — Collapse)</i>"]
+    end
+
+    subgraph STAGE5["Stage 5: Proposed Roadmap"]
+        E5["Proposed Phase 3 Lowering\n- Step A: DeBERTa Feasibility Probe\n- Step B: Aho-Corasick / Decision Lists\n<i>(Target: <1 MiB CPU Binary)</i>"]
+    end
+
+    E1 -->|Teacher Introspection| E2
+    E2 -->|Long-Tail Compression| E3
+    E3 -->|Naive Linear Extraction| E4
+    E3 ==>|Roadmap to Deployment| E5
+
+    style E2 fill:#ecfdf5,stroke:#059669,stroke-width:2px
+    style E3 fill:#eff6ff,stroke:#2563eb,stroke-width:2px
+    style E4 fill:#fef2f2,stroke:#dc2626,stroke-width:2px
+    style E5 fill:#fffbeb,stroke:#d97706,stroke-width:2px,stroke-dasharray: 5 5
 
 ```
 
