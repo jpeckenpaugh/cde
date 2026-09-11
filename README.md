@@ -1,3 +1,27 @@
+# Preface
+
+This specification is the direct result of an engineering dead-end.
+
+In earlier published work and multi-agent experiments, I explored how far role decomposition, state machines, and recursive supervision could push the reliability of frontier language models. By structuring agents into specialized personas—architects, implementers, and reviewers constrained by strict operational boundaries—it was possible to orchestrate functional software workflows with minimal direct human coding.
+
+Yet every iteration ran into the same fundamental wall: **who verifies the verifier?**
+
+Layering agents on top of agents to catch hallucinations, audit code, and enforce rules simply moves uncertainty around in a circle. Two models agreeing is evidence; it is not proof. When the verification gate is itself a stochastic token predictor, the system never truly leaves the probabilistic stack, remaining vulnerable to silent, compounding failure modes.
+
+To achieve deterministic operational integrity in high-stakes environments, verification cannot rely on continuous neural inference at runtime. The rules governing validity should exist outside the model entirely—as an explicit, deterministic, and inspectable substrate.
+
+The **Compiled Domain Expertise (CDE)** framework and the **Quantized Semantic Bottleneck Architecture (QSBA)** are designed around a different answer: severing knowledge acquisition from knowledge execution.
+
+* **At build time**, high-capacity models operate offline as an empirical knowledge compiler to explore a closed domain, extract candidate reasoning structures, and surface inferential dependencies.
+* **At runtime**, the architecture seeks to execute only the surviving, empirically validated structures after they have been lowered into a **Domain Instruction Set (DIS)**—with an explicit design target of a sub-megabyte, integer-only artifact executing deterministically on standard CPU hardware without an active language model.
+
+This document does not propose an open-world artificial general intelligence. It specifies an architecture for bounded, auditable, and durable domain competence.
+
+— *Jarad R. Peckenpaugh*  
+*September 2026*
+
+---
+
 # Compiled Domain Expertise (CDE): An Architectural Specification of the Quantized Semantic Bottleneck Architecture (QSBA) and Domain Instruction Sets (DIS)
 
 The dominant paradigm in contemporary artificial intelligence conflates two fundamentally distinct computational processes: knowledge acquisition and knowledge execution. Frontier deep neural networks operate as probabilistic proposal engines, generating language via dense floating-point continuous manifolds. While effective for open-domain pattern synthesis, this continuous substrate introduces fundamental vulnerabilities in high-stakes environments: parameter bloat, uninspectable latent mechanisms, high computational overhead, and silent failures where factually correct conclusions are generated through invalid reasoning paths.
