@@ -8,7 +8,7 @@ Yet every iteration ran into the same fundamental wall: **who verifies the verif
 
 Layering agents on top of agents to catch hallucinations, audit code, and enforce rules simply moves uncertainty around in a circle. Two models agreeing is evidence; it is not proof. When the verification gate is itself a stochastic token predictor, the system never truly leaves the probabilistic stack, remaining vulnerable to silent, compounding failure modes.
 
-To achieve deterministic operational integrity in high-stakes environments, verification cannot rely on continuous neural inference at runtime. The rules governing validity must exist outside the model entirely—as an explicit, deterministic, and inspectable substrate.
+To achieve deterministic operational integrity in high-stakes environments, verification cannot rely on continuous neural inference at runtime. The rules governing validity should exist outside the model entirely—as an explicit, deterministic, and inspectable substrate.
 
 The **Compiled Domain Expertise (CDE)** framework and the **Quantized Semantic Bottleneck Architecture (QSBA)** are designed around a different answer: severing knowledge acquisition from knowledge execution.
 
@@ -185,7 +185,7 @@ The unstructured rationales of the teacher model are compiled into a normalized 
 +-------------------------------------------------------------------------+
 |  [ INFERENCES ]                                                         |
 |  - inference_id: INT (Primary Key)                                      |
-|  - surface_hash: BYTEA (Canonical hash of input invariant)               |
+|  - surface_hash: BYTEA (Canonical hash of input invariant)              |
 |  - terminal_id: INT (Foreign Key -> TERMINAL_STATES.id)                 |
 |                                                                         |
 |  [ OPCODES (C - The Instruction Set) ]                                  |
@@ -360,39 +360,55 @@ sequenceDiagram
 
 Abstracting away specific domain instances leaves a universal, typed, compositional structure: the algebra of reasoning.
 
-```mermaid
-flowchart BT
-    subgraph L4["Layer 4: Linguistic Transducers"]
-        T_EN["English"] ~~~ T_ES["Spanish"] ~~~ T_ZH["Mandarin"]
-    end
+```
 
-    subgraph L3["Layer 3: Categorical Proof Graph"]
-        CPG["Finitely Presented Fragment of a Cartesian Closed Category\nObjects = Types/Distinctions | Morphisms = Lawful Proofs"]
-    end
+LAYER 4
 
-    subgraph L2["Layer 2: Domain-Specific ISA"]
-        ISA["Domain Opcodes (ASSERT_RIGHT, INVERT_OPCODE)\nCompiled reusable macro-assemblies"]
-    end
+[ Multilingual Interfaces ]
 
-    subgraph L1["Layer 1: Combinators (Logic Gates)"]
-        G_ID["Identity (id)"] --- G_COMP["Composition (○)"] --- G_PAIR["Pairing (⟨f,g⟩)"]
-        G_CURR["Currying (Λ)"] --- G_EVAL["Eval"] --- G_NEG["Negation (¬)"]
-    end
+Transduction between surface tokens and domain opcodes
 
-    subgraph L0["Layer 0: Distinctions (The Primordial Cut)"]
-        CUT["Boundary Partition: Cut(S) → {d, ¬d}"]
-    end
+▲
 
-    L0 --> L1
-    L1 --> L2
-    L2 --> L3
-    L3 --> L4
+│
 
-    style L0 fill:#fafafa,stroke:#a1a1aa
-    style L1 fill:#f4f4f5,stroke:#71717a
-    style L2 fill:#e0f2fe,stroke:#0284c7
-    style L3 fill:#ede9fe,stroke:#7c3aed
-    style L4 fill:#fef2f2,stroke:#dc2626
+LAYER 3
+
+[ Categorical Proof Graph ]
+
+Finitely presented fragment of a Cartesian closed category
+
+▲
+
+│
+
+LAYER 2
+
+[ Domain-Specific ISA ]
+
+Named macro-compositions of combinators
+
+▲
+
+│
+
+LAYER 1
+
+[ Combinators / Logic Gates ]
+
+Primitive relational operations on boundaries
+
+▲
+
+│
+
+LAYER 0
+
+[ Distinctions ]
+
+The primordial cut: binary partition of a space
+
+
 
 ```
 
