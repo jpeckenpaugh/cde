@@ -76,3 +76,15 @@ Sub-agents tasked with building this feature MUST:
 1. Perform the **YODAYAT Agent Bootstrap Declaration** (Read `YODAYAT.md` & `ingest_control.md`, affirm commitment, state role & task).
 2. Review the spec and probe the codebase for technical open questions without writing code.
 3. Report open questions and recommendations to the Parent Lead Agent for User review.
+
+---
+
+## Approved Architectural Decisions
+
+The following technical decisions have been approved for implementation:
+
+1. **In-Memory Thread-Safe Status Tracker:** `GET /api/documents/ingest/status` returns state from a thread-safe in-memory progress tracker (updated page-by-page by worker) in `< 5ms` without hitting SQLite read-locks during 1s polling. SQLite session uses WAL mode (`PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;`).
+2. **Database Reset Purge Scope:** `--reset-db` flushes relational database tables (`documents`, `chapters`, `sections`, `pages`, `source_spans`, `items`, `links`), but preserves disk artifacts under `data/artifacts/` if SHA-256 checksums match. Optional `--purge-artifacts` flag clears disk directory.
+3. **Source Discovery Endpoint:** Add `GET /api/documents/sources` listing available PDF files in `domains/algebra/sources/`.
+4. **Single Active Ingestion Gating:** `POST /api/documents/ingest` returns `HTTP 409 Conflict` if an ingestion job is already running, preventing concurrent writer collisions.
+
