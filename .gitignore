@@ -1,1 +1,4 @@
 .venv/
+.codex-finalizer/
+pptx/node_modules
+.DS_Store
