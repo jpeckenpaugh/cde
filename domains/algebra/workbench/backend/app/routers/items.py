@@ -24,10 +24,6 @@ from app.models.domain import AssessmentItem, Section, SourceSpan, AssessmentPar
 
 @router.get("/sections/{section_id}/items", response_model=List[AssessmentItemSchema])
 def get_section_items(section_id: str, db: Session = Depends(get_db)):
-    sec = db.query(Section).filter(Section.id == section_id).first()
-    if not sec:
-        raise HTTPException(status_code=404, detail="Section not found")
-
     items = db.query(AssessmentItem).filter(
         AssessmentItem.section_id == section_id
     ).options(

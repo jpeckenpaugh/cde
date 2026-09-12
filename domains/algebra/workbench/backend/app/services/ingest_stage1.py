@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import uuid
 import shutil
 import hashlib
 import argparse
@@ -398,8 +399,9 @@ def run_stage1_ingestion(
                 if level == 1:
                     # Chapter
                     chap_no = len(document.chapters) + 1
+                    chap_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc_checksum}:chapter:{chap_no}:{title}"))
                     current_chapter = Chapter(
-                        id=generate_uuid(),
+                        id=chap_id,
                         document_id=document.id,
                         chapter_number=chap_no,
                         title=title
@@ -410,8 +412,9 @@ def run_stage1_ingestion(
                 elif level >= 2 and current_chapter:
                     # Section
                     sec_no = f"{current_chapter.chapter_number}.{len(current_chapter.sections) + 1}"
+                    sec_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc_checksum}:section:{sec_no}:{title}"))
                     sec = Section(
-                        id=generate_uuid(),
+                        id=sec_id,
                         chapter_id=current_chapter.id,
                         section_number=sec_no,
                         title=title
