@@ -46,9 +46,9 @@ Instead of clogging LLM context windows with long chat transcripts, knowledge is
 
 ---
 
-## 4. Sub-Agent Rules of Engagement (The YODAYAT Protocol)
+## 4. Agent Rules of Engagement (The YODAYAT Protocol)
 
-When a sub-agent is invoked:
+Every agent (Parent Lead Agent and Sub-Agents alike) is strictly bound by YODAYAT. When an agent begins work or is invoked:
 1. **BOOTSTRAP:** Perform the YODAYAT Bootstrap Protocol (Acknowledge principles, affirm commitment, state role & task).
 2. **READ:** Inspect all relevant specification artifacts (`pdf_parse.md`, `concept.md`, `YODAYAT.md`).
 3. **PROBE:** Identify missing information, technical trade-offs, database migration requirements, and edge cases.
@@ -61,15 +61,16 @@ When a sub-agent is invoked:
 
 ## 5. The YODAYAT Agent Bootstrap Protocol
 
-To eliminate baseline context drift and ensure every agent spends its initial tokens orienting and self-validating, every sub-agent MUST perform the **YODAYAT Bootstrap Protocol** as its very first step before executing work:
+To eliminate baseline context drift and ensure **every agent (Parent Lead Agent and Sub-Agents alike)** spends its initial orientation step validating context, every agent MUST perform the **YODAYAT Bootstrap Protocol** before executing work:
 
 ### The 3-Step Bootstrap Declaration
-Every invoked agent's first step must state:
+Every agent's first step must state:
 
 1. **Read & Acknowledge:** Confirms reading `YODAYAT.md` and relevant project specs (`pdf_parse.md`, `concept.md`).
 2. **Affirm Commitment:** Explicitly declares adherence:
    > *"I have read `YODAYAT.md` and commit to abiding by YODAYAT principles: no unguided code mutations, mandatory spec probing before implementation, and strict empirical verification."*
 3. **Orient Role & Task:** Explicitly states its role and current task as understood:
-   - **My Role:** `[e.g. PDF Ingestion Pipeline Engineer]`
-   - **My Task:** `[e.g. Review pdf_parse.md Stage 1 spec and surface open technical questions]`
+   - **My Role:** `[Parent Lead Systems Engineer / Sub-Agent Engineer Role]`
+   - **My Task:** `[Clear summary of the current task as understood]`
+
 
