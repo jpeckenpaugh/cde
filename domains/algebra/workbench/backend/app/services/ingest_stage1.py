@@ -5,14 +5,18 @@ import shutil
 import hashlib
 import argparse
 import subprocess
+import threading
+from datetime import datetime, timezone
 from pathlib import Path
 import pymupdf as fitz
 from sqlalchemy.orm import Session
 
 from app.db.session import SessionLocal
-from app.config import ARTIFACTS_DIR, DATA_DIR
+from app.config import ARTIFACTS_DIR, DATA_DIR, SOURCES_DIR
 from app.models.domain import (
     Document, Page, SourceSpan, Chapter, Section,
+    AssessmentItem, AssessmentPart, AnswerEntry,
+    ItemAnswerLink, ReviewEvent, ItemSourceSpan, AnswerSourceSpan,
     ParserEnvironment, IngestionRun, generate_uuid
 )
 
@@ -56,6 +60,91 @@ def capture_environment_audit(db: Session) -> ParserEnvironment:
     db.refresh(env)
     return env
 
+def reset_database(db: Session, purge_artifacts: bool = False):
+    """
+    Flushes all relational database tables in reverse dependency order.
+    Optionally purges generated artifact files from data/artifacts/.
+    """
+    db.query(ReviewEvent).delete()
+    db.query(ItemAnswerLink).delete()
+    db.query(AnswerSourceSpan).delete()
+    db.query(ItemSourceSpan).delete()
+    db.query(AssessmentPart).delete()
+    db.query(AssessmentItem).delete()
+    db.query(AnswerEntry).delete()
+    db.query(Section).delete()
+    db.query(Chapter).delete()
+    db.query(SourceSpan).delete()
+    db.query(Page).delete()
+    db.query(IngestionRun).delete()
+    db.query(Document).delete()
+    db.query(ParserEnvironment).delete()
+    db.commit()
+
+    if purge_artifacts and ARTIFACTS_DIR.exists():
+        for item in ARTIFACTS_DIR.iterdir():
+            if item.is_dir():
+                shutil.rmtree(item)
+            else:
+                item.unlink()
+
+class IngestionProgressTracker:
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._state = {
+            "run_id": None,
+            "status": "idle",
+            "started_at": None,
+            "completed_at": None,
+            "pages_processed": 0,
+            "total_pages": 0,
+            "current_page_number": 0,
+            "current_section_title": None,
+            "error_message": None
+        }
+
+    def start_job(self, run_id: str, total_pages: int):
+        with self._lock:
+            self._state = {
+                "run_id": run_id,
+                "status": "running",
+                "started_at": datetime.now(timezone.utc).isoformat(),
+                "completed_at": None,
+                "pages_processed": 0,
+                "total_pages": total_pages,
+                "current_page_number": 0,
+                "current_section_title": None,
+                "error_message": None
+            }
+
+    def update_progress(self, pages_processed: int, current_page_number: int, current_section_title: str | None = None):
+        with self._lock:
+            self._state["pages_processed"] = pages_processed
+            self._state["current_page_number"] = current_page_number
+            if current_section_title:
+                self._state["current_section_title"] = current_section_title
+
+    def complete_job(self):
+        with self._lock:
+            self._state["status"] = "completed"
+            self._state["completed_at"] = datetime.now(timezone.utc).isoformat()
+
+    def fail_job(self, error_message: str):
+        with self._lock:
+            self._state["status"] = "failed"
+            self._state["completed_at"] = datetime.now(timezone.utc).isoformat()
+            self._state["error_message"] = error_message
+
+    def get_status(self) -> dict:
+        with self._lock:
+            return dict(self._state)
+
+    def is_running(self) -> bool:
+        with self._lock:
+            return self._state["status"] == "running"
+
+ingestion_progress_tracker = IngestionProgressTracker()
+
 def parse_page_range(pages_str: str | None, total_pages: int) -> list[int]:
     if not pages_str:
         return list(range(1, total_pages + 1))
@@ -94,7 +183,9 @@ def run_stage1_ingestion(
     pdf_path: str | Path,
     pages_arg: str | None = None,
     output_dir: str | Path | None = None,
-    db: Session | None = None
+    db: Session | None = None,
+    reset_db: bool = False,
+    purge_artifacts: bool = False
 ) -> dict:
     pdf_path = Path(pdf_path).resolve()
     if not pdf_path.exists():
@@ -106,6 +197,9 @@ def run_stage1_ingestion(
         should_close_db = True
 
     try:
+        if reset_db:
+            reset_database(db, purge_artifacts=purge_artifacts)
+
         # 1. SHA-256 Checksum Calculation
         doc_checksum = compute_file_checksum(pdf_path)
         
@@ -157,9 +251,18 @@ def run_stage1_ingestion(
         pages_artifact_dir = doc_artifact_dir / "pages"
         pages_artifact_dir.mkdir(parents=True, exist_ok=True)
 
+        ingestion_progress_tracker.start_job(
+            run_id=ingestion_run.id,
+            total_pages=len(target_pages)
+        )
+
         pages_summary = []
 
-        for p_num in target_pages:
+        for processed_idx, p_num in enumerate(target_pages, 1):
+            ingestion_progress_tracker.update_progress(
+                pages_processed=processed_idx,
+                current_page_number=p_num
+            )
             p_idx = p_num - 1
             page = pdf_doc[p_idx]
             page_dir = pages_artifact_dir / f"page_{p_num:04d}"
@@ -334,6 +437,7 @@ def run_stage1_ingestion(
         db.commit()
 
         pdf_doc.close()
+        ingestion_progress_tracker.complete_job()
 
         return {
             "status": "success",
@@ -343,22 +447,30 @@ def run_stage1_ingestion(
             "artifact_dir": str(doc_artifact_dir),
             "pages_processed": len(target_pages)
         }
+    except Exception as e:
+        ingestion_progress_tracker.fail_job(str(e))
+        raise e
     finally:
         if should_close_db:
             db.close()
 
 def main():
+    default_pdf = SOURCES_DIR / "elementary-algebra-2e_-_WEB.pdf"
     parser = argparse.ArgumentParser(description="Stage 1 PDF Ingestion Pipeline CLI")
-    parser.add_argument("--pdf", required=True, help="Path to input PDF document")
+    parser.add_argument("--pdf", default=str(default_pdf), help="Path to input PDF document")
     parser.add_argument("--pages", help="Page range filter (e.g., '1-10', '1,2,5')")
     parser.add_argument("--output-dir", help="Base directory for output artifacts")
+    parser.add_argument("--reset-db", action="store_true", help="Flush database before ingestion")
+    parser.add_argument("--purge-artifacts", action="store_true", help="Purge disk artifacts on database reset")
     
     args = parser.parse_args()
 
     result = run_stage1_ingestion(
         pdf_path=args.pdf,
         pages_arg=args.pages,
-        output_dir=args.output_dir
+        output_dir=args.output_dir,
+        reset_db=args.reset_db,
+        purge_artifacts=args.purge_artifacts
     )
 
     print(json.dumps(result, indent=2))

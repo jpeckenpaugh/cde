@@ -106,3 +106,28 @@ export interface VerifiedSampleExport {
   verification_status: string;
   provenance: any;
 }
+
+export interface SourcePdf {
+  filename: string;
+  path: string;
+  size_bytes: number;
+}
+
+export interface IngestRequest {
+  pdf_filename: string;
+  pages_range?: string;
+  reset_db: boolean;
+  purge_artifacts?: boolean;
+}
+
+export interface IngestStatus {
+  run_id?: string;
+  status: 'idle' | 'running' | 'completed' | 'failed';
+  started_at?: string;
+  completed_at?: string;
+  pages_processed: number;
+  total_pages: number;
+  current_page_number: number;
+  current_section_title?: string;
+  error_message?: string;
+}

@@ -6,6 +6,7 @@ import { SampleDetailView } from './components/SampleDetailView';
 import { ReviewQueueView } from './components/ReviewQueueView';
 import { ExportView } from './components/ExportView';
 import { PdfViewerModal } from './components/PdfViewerModal';
+import { IngestModal } from './components/IngestModal';
 import { usePdfSearchParams } from './hooks/usePdfSearchParams';
 import {
   fetchChapters,
@@ -27,6 +28,7 @@ export const App: React.FC = () => {
   const navigate = useNavigate();
   const { isPdfOpen, pdfDoc, pdfPage, openPdfPage, closePdf } = usePdfSearchParams();
 
+  const [isIngestOpen, setIsIngestOpen] = useState<boolean>(false);
   const [chapters, setChapters] = useState<ChapterHierarchy[]>([]);
   const [reviewQueue, setReviewQueue] = useState<ItemAnswerLink[]>([]);
   const [verifiedSamples, setVerifiedSamples] = useState<VerifiedSampleExport[]>([]);
@@ -90,6 +92,7 @@ export const App: React.FC = () => {
         reviewQueueCount={reviewQueue.length}
         verifiedCount={verifiedSamples.length}
         onOpenPdf={() => openPdfPage(1, '1')}
+        onOpenIngest={() => setIsIngestOpen(true)}
       />
 
       <main className="flex-1 overflow-hidden">
@@ -142,6 +145,13 @@ export const App: React.FC = () => {
         onClose={closePdf}
         initialPage={pdfPage}
         documentId={pdfDoc}
+      />
+
+      {/* Ingestion Control Modal */}
+      <IngestModal
+        isOpen={isIngestOpen}
+        onClose={() => setIsIngestOpen(false)}
+        onIngestComplete={refreshGlobalCounts}
       />
     </div>
   );

@@ -1,13 +1,77 @@
 import os
 from pathlib import Path
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, status
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.domain import Document, Page
 from app.config import SOURCES_DIR, ARTIFACTS_DIR, DATA_DIR
+from app.schemas.domain import IngestRequestSchema, IngestStatusResponseSchema, SourcePdfSchema
+from app.services.ingest_stage1 import run_stage1_ingestion, ingestion_progress_tracker
 
 router = APIRouter(prefix="/api/documents", tags=["documents"])
+
+@router.get("/sources", response_model=list[SourcePdfSchema])
+def list_source_pdfs():
+    if not SOURCES_DIR.exists():
+        return []
+    sources = []
+    for pdf_file in SOURCES_DIR.glob("*.pdf"):
+        sources.append({
+            "filename": pdf_file.name,
+            "path": str(pdf_file),
+            "size_bytes": pdf_file.stat().st_size
+        })
+    return sources
+
+def _run_ingest_background(pdf_path: Path, pages_range: str | None, reset_db: bool, purge_artifacts: bool):
+    try:
+        run_stage1_ingestion(
+            pdf_path=pdf_path,
+            pages_arg=pages_range,
+            reset_db=reset_db,
+            purge_artifacts=purge_artifacts
+        )
+    except Exception as e:
+        print(f"Background ingestion failed: {e}")
+
+@router.post("/ingest", status_code=status.HTTP_202_ACCEPTED)
+def trigger_document_ingestion(payload: IngestRequestSchema, background_tasks: BackgroundTasks):
+    if ingestion_progress_tracker.is_running():
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="An ingestion job is currently running."
+        )
+
+    pdf_path = SOURCES_DIR / payload.pdf_filename
+    if not pdf_path.exists():
+        pdf_files = list(SOURCES_DIR.glob("*.pdf"))
+        if pdf_files:
+            pdf_path = pdf_files[0]
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Source PDF '{payload.pdf_filename}' not found in {SOURCES_DIR}"
+            )
+
+    background_tasks.add_task(
+        _run_ingest_background,
+        pdf_path=pdf_path,
+        pages_range=payload.pages_range,
+        reset_db=payload.reset_db,
+        purge_artifacts=payload.purge_artifacts
+    )
+
+    return {
+        "message": "Ingestion job started in background.",
+        "pdf_filename": pdf_path.name,
+        "pages_range": payload.pages_range,
+        "reset_db": payload.reset_db
+    }
+
+@router.get("/ingest/status", response_model=IngestStatusResponseSchema)
+def get_ingestion_status():
+    return ingestion_progress_tracker.get_status()
 
 @router.get("/{document_id}/pdf")
 def get_document_pdf(document_id: str, db: Session = Depends(get_db)):

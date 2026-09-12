@@ -1,17 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { BookOpen, ListChecks, CheckCircle, Download, FileText } from 'lucide-react';
+import { BookOpen, ListChecks, CheckCircle, Download, FileText, Database } from 'lucide-react';
 
 interface NavbarProps {
   reviewQueueCount: number;
   verifiedCount: number;
   onOpenPdf?: () => void;
+  onOpenIngest?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   reviewQueueCount,
   verifiedCount,
   onOpenPdf,
+  onOpenIngest,
 }) => {
   return (
     <nav className="bg-gray-800 border-b border-gray-700 px-6 py-3 flex items-center justify-between shadow-md">
@@ -78,10 +80,21 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
         </NavLink>
 
+        {onOpenIngest && (
+          <button
+            onClick={onOpenIngest}
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-md font-medium text-sm text-blue-400 hover:text-white hover:bg-blue-600/20 transition border border-blue-500/40 ml-2"
+            title="Ingest raw textbook PDF document into Stage 1 artifacts"
+          >
+            <Database className="w-4 h-4 text-blue-400" />
+            <span>Ingest PDF</span>
+          </button>
+        )}
+
         {onOpenPdf && (
           <button
             onClick={onOpenPdf}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-md font-medium text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition border border-gray-700 ml-2"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-md font-medium text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition border border-gray-700"
             title="Open OpenStax Elementary Algebra PDF Document"
           >
             <FileText className="w-4 h-4 text-amber-400" />

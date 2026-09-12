@@ -3,7 +3,10 @@ import {
   AssessmentItem,
   ItemAnswerLink,
   ReviewSubmission,
-  VerifiedSampleExport
+  VerifiedSampleExport,
+  SourcePdf,
+  IngestRequest,
+  IngestStatus
 } from '../types';
 
 const API_BASE = '/api';
@@ -46,5 +49,30 @@ export async function submitReview(linkId: string, submission: ReviewSubmission)
 export async function fetchVerifiedExport(): Promise<VerifiedSampleExport[]> {
   const res = await fetch(`${API_BASE}/export/verified-samples`);
   if (!res.ok) throw new Error('Failed to fetch verified export');
+  return res.json();
+}
+
+export async function fetchSourcePdfs(): Promise<SourcePdf[]> {
+  const res = await fetch(`${API_BASE}/documents/sources`);
+  if (!res.ok) throw new Error('Failed to fetch source PDFs');
+  return res.json();
+}
+
+export async function triggerIngest(req: IngestRequest): Promise<{ message: string; pdf_filename: string }> {
+  const res = await fetch(`${API_BASE}/documents/ingest`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({ detail: 'Ingestion failed to start' }));
+    throw new Error(errorData.detail || 'Failed to start ingestion');
+  }
+  return res.json();
+}
+
+export async function fetchIngestStatus(): Promise<IngestStatus> {
+  const res = await fetch(`${API_BASE}/documents/ingest/status`);
+  if (!res.ok) throw new Error('Failed to fetch ingestion status');
   return res.json();
 }

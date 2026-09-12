@@ -115,3 +115,25 @@ class VerifiedSampleExportSchema(BaseModel):
     answer_text: str
     verification_status: str
     provenance: Any
+
+class IngestRequestSchema(BaseModel):
+    pdf_filename: str = Field(default="elementary-algebra-2e_-_WEB.pdf", description="Name of PDF file in domains/algebra/sources/")
+    pages_range: Optional[str] = Field(default=None, description="Page range filter e.g. '1-50' or 'all'")
+    reset_db: bool = Field(default=False, description="Flush database before ingestion")
+    purge_artifacts: bool = Field(default=False, description="Purge disk artifacts on database reset")
+
+class IngestStatusResponseSchema(BaseModel):
+    run_id: Optional[str] = None
+    status: str
+    started_at: Optional[str] = None
+    completed_at: Optional[str] = None
+    pages_processed: int = 0
+    total_pages: int = 0
+    current_page_number: int = 0
+    current_section_title: Optional[str] = None
+    error_message: Optional[str] = None
+
+class SourcePdfSchema(BaseModel):
+    filename: str
+    path: str
+    size_bytes: int
