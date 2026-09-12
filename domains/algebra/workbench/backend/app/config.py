@@ -15,3 +15,6 @@ SOURCES_DIR = BASE_DIR.parent / "sources"
 
 SEED_FILE = DATA_DIR / "mock_seed.json"
 
+ARTIFACTS_DIR = DATA_DIR / "artifacts"
+ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
+

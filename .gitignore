@@ -12,6 +12,9 @@ node_modules/
 *.db
 *.sqlite
 *.sqlite3
+data/artifacts/
+**/data/artifacts/
+
 
 # OS & IDE metadata
 .DS_Store

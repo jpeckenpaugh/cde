@@ -9,7 +9,6 @@ from app.db.session import Base, get_db
 from app.main import app
 from app.db.seed import seed_db
 
-# Use StaticPool with sqlite in-memory so all connections share the same in-memory database
 engine = create_engine(
     "sqlite://",
     connect_args={"check_same_thread": False},
@@ -31,15 +30,15 @@ def override_get_db():
     finally:
         db.close()
 
-app.dependency_overrides[get_db] = override_get_db
-
 @pytest.fixture(autouse=True)
 def setup_db():
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
     seed_db(db)
+    app.dependency_overrides[get_db] = override_get_db
     yield
     db.close()
+    app.dependency_overrides.clear()
     Base.metadata.drop_all(bind=engine)
 
 client = TestClient(app)
@@ -100,4 +99,3 @@ def test_get_document_pdf():
     response = client.get("/api/documents/1/pdf")
     assert response.status_code == 200
     assert response.headers["content-type"] == "application/pdf"
-
