@@ -97,8 +97,8 @@ export const App: React.FC = () => {
 
       <main className="flex-1 overflow-hidden">
         <Routes>
-          <Route path="/" element={<Navigate to="/corpus/sections/sec-1-1" replace />} />
-          <Route path="/corpus" element={<Navigate to="/corpus/sections/sec-1-1" replace />} />
+          <Route path="/" element={<DefaultCorpusRedirect chapters={chapters} isLoadingChapters={isLoadingChapters} />} />
+          <Route path="/corpus" element={<DefaultCorpusRedirect chapters={chapters} isLoadingChapters={isLoadingChapters} />} />
           <Route
             path="/corpus/sections/:sectionId"
             element={
@@ -157,6 +157,18 @@ export const App: React.FC = () => {
   );
 };
 
+// Component to dynamically navigate to first available section
+const DefaultCorpusRedirect: React.FC<{ chapters: ChapterHierarchy[]; isLoadingChapters: boolean }> = ({ chapters, isLoadingChapters }) => {
+  if (isLoadingChapters) {
+    return <div className="flex items-center justify-center h-48 text-gray-400 text-sm">Loading corpus...</div>;
+  }
+  const firstSectionId = chapters.find((ch) => ch.sections.length > 0)?.sections[0]?.id;
+  if (firstSectionId) {
+    return <Navigate to={`/corpus/sections/${firstSectionId}`} replace />;
+  }
+  return <Navigate to="/corpus/sections/none" replace />;
+};
+
 // Sub-component wrapper for Section and Item Corpus Routes
 const CorpusRouteWrapper: React.FC<{
   chapters: ChapterHierarchy[];
@@ -170,20 +182,33 @@ const CorpusRouteWrapper: React.FC<{
   const [sectionItems, setSectionItems] = useState<AssessmentItem[]>([]);
   const [selectedItem, setSelectedItem] = useState<AssessmentItem | null>(null);
   const [isLoadingItems, setIsLoadingItems] = useState<boolean>(false);
-  const [activeSectionId, setActiveSectionId] = useState<string>(sectionId || 'sec-1-1');
+  const [activeSectionId, setActiveSectionId] = useState<string>('');
 
   // Load items for section
   useEffect(() => {
-    const secToLoad = sectionId || activeSectionId;
-    if (secToLoad) {
+    let secToLoad = sectionId;
+    // Fallback if sectionId is missing, legacy 'sec-1-1', or 'none'
+    if (!secToLoad || secToLoad === 'sec-1-1' || secToLoad === 'none') {
+      const firstSec = chapters.find((ch) => ch.sections.length > 0)?.sections[0]?.id;
+      if (firstSec) {
+        secToLoad = firstSec;
+      }
+    }
+
+    if (secToLoad && secToLoad !== 'none' && secToLoad !== 'sec-1-1') {
       setActiveSectionId(secToLoad);
       setIsLoadingItems(true);
       fetchSectionItems(secToLoad)
         .then(setSectionItems)
-        .catch(console.error)
+        .catch((err) => {
+          console.warn('Could not fetch section items:', secToLoad, err);
+          setSectionItems([]);
+        })
         .finally(() => setIsLoadingItems(false));
+    } else {
+      setSectionItems([]);
     }
-  }, [sectionId]);
+  }, [sectionId, chapters]);
 
   // Load item detail modal if itemId parameter is in URL
   useEffect(() => {

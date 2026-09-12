@@ -19,6 +19,9 @@ export async function fetchChapters(): Promise<ChapterHierarchy[]> {
 
 export async function fetchSectionItems(sectionId: string): Promise<AssessmentItem[]> {
   const res = await fetch(`${API_BASE}/sections/${sectionId}/items`);
+  if (res.status === 404) {
+    return [];
+  }
   if (!res.ok) throw new Error('Failed to fetch section items');
   return res.json();
 }
