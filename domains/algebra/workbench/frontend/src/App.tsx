@@ -187,11 +187,15 @@ const CorpusRouteWrapper: React.FC<{
   // Load items for section
   useEffect(() => {
     let secToLoad = sectionId;
-    // Fallback if sectionId is missing, legacy 'sec-1-1', or 'none'
-    if (!secToLoad || secToLoad === 'sec-1-1' || secToLoad === 'none') {
-      const firstSec = chapters.find((ch) => ch.sections.length > 0)?.sections[0]?.id;
-      if (firstSec) {
+    const allSections = chapters.flatMap((ch) => ch.sections);
+    const sectionExists = allSections.some((sec) => sec.id === secToLoad);
+
+    // Fallback if sectionId is missing, invalid (e.g. pre-reset UUID), legacy 'sec-1-1', or 'none'
+    if (!secToLoad || !sectionExists || secToLoad === 'sec-1-1' || secToLoad === 'none') {
+      const firstSec = allSections[0]?.id;
+      if (firstSec && firstSec !== secToLoad) {
         secToLoad = firstSec;
+        navigate(`/corpus/sections/${firstSec}`, { replace: true });
       }
     }
 
