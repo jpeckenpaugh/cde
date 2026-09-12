@@ -174,3 +174,23 @@ minimal static JavaScript client served by FastAPI. React + Vite is preferred
 if the workbench is expected to grow into a sustained review tool; the static
 client is appropriate only if the first milestone must optimize for the
 fewest moving parts.
+
+---
+
+## Approved Architectural Decisions
+
+The following architectural choices have been approved for implementation:
+
+1. **Frontend Baseline:** React + Vite + TypeScript + Tailwind CSS, compiled to static distribution files and served directly by FastAPI in single-port production execution mode.
+2. **Directory Layout:** Situated self-contained under `domains/algebra/workbench/`:
+   - `backend/` (FastAPI application, SQLAlchemy 2.0 ORM, Alembic migrations)
+   - `frontend/` (React + Vite SPA source code)
+   - `data/` (SQLite `algebra_ekc.db` database and `mock_seed.json`)
+   - `install.sh` & `run.sh`
+3. **Python Environment:** Environment setup script must explicitly use the `python3.12` executable to create the virtual environment (`.venv`).
+4. **Database & ORM:** FastAPI + SQLAlchemy 2.0 + SQLite (with `PRAGMA foreign_keys=ON;` and FTS5 enabled), managed via Alembic migrations.
+5. **Execution & Setup Scripts:**
+   - `install.sh`: Creates Python virtual environment using `python3.12 -m venv .venv`, installs Python requirements, installs npm packages, and builds frontend assets into `backend/app/static/`.
+   - `run.sh`: Activates `.venv`, runs `alembic upgrade head`, populates seed data if DB is empty, and starts Uvicorn server on `http://localhost:8000`.
+6. **Mock Dataset Scenarios:** Deterministic seed dataset covering linear equation pairs, unreviewed parser candidates, multipart exercises (a, b, c), human-corrected answer links, and instructional worked examples.
+

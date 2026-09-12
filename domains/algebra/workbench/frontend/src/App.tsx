@@ -1,0 +1,263 @@
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Navbar } from './components/Navbar';
+import { CorpusView } from './components/CorpusView';
+import { SampleDetailView } from './components/SampleDetailView';
+import { ReviewQueueView } from './components/ReviewQueueView';
+import { ExportView } from './components/ExportView';
+import { PdfViewerModal } from './components/PdfViewerModal';
+import { usePdfSearchParams } from './hooks/usePdfSearchParams';
+import {
+  fetchChapters,
+  fetchSectionItems,
+  fetchItem,
+  fetchReviewQueue,
+  fetchVerifiedExport,
+  submitReview
+} from './api/client';
+import {
+  ChapterHierarchy,
+  AssessmentItem,
+  ItemAnswerLink,
+  VerifiedSampleExport,
+  ReviewSubmission
+} from './types';
+
+export const App: React.FC = () => {
+  const navigate = useNavigate();
+  const { isPdfOpen, pdfDoc, pdfPage, openPdfPage, closePdf } = usePdfSearchParams();
+
+  const [chapters, setChapters] = useState<ChapterHierarchy[]>([]);
+  const [reviewQueue, setReviewQueue] = useState<ItemAnswerLink[]>([]);
+  const [verifiedSamples, setVerifiedSamples] = useState<VerifiedSampleExport[]>([]);
+
+  const [isLoadingChapters, setIsLoadingChapters] = useState<boolean>(true);
+  const [isLoadingQueue, setIsLoadingQueue] = useState<boolean>(false);
+  const [isLoadingExport, setIsLoadingExport] = useState<boolean>(false);
+
+  const loadChapters = async () => {
+    setIsLoadingChapters(true);
+    try {
+      const data = await fetchChapters();
+      setChapters(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoadingChapters(false);
+    }
+  };
+
+  const loadQueue = async (status?: string) => {
+    setIsLoadingQueue(true);
+    try {
+      const queue = await fetchReviewQueue(status);
+      setReviewQueue(queue);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoadingQueue(false);
+    }
+  };
+
+  const loadExports = async () => {
+    setIsLoadingExport(true);
+    try {
+      const exports = await fetchVerifiedExport();
+      setVerifiedSamples(exports);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoadingExport(false);
+    }
+  };
+
+  const refreshGlobalCounts = async () => {
+    await Promise.all([loadChapters(), loadQueue(), loadExports()]);
+  };
+
+  useEffect(() => {
+    refreshGlobalCounts();
+  }, []);
+
+  const handleReviewSubmit = async (linkId: string, submission: ReviewSubmission) => {
+    await submitReview(linkId, submission);
+    await refreshGlobalCounts();
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col font-sans">
+      <Navbar
+        reviewQueueCount={reviewQueue.length}
+        verifiedCount={verifiedSamples.length}
+        onOpenPdf={() => openPdfPage(1, '1')}
+      />
+
+      <main className="flex-1 overflow-hidden">
+        <Routes>
+          <Route path="/" element={<Navigate to="/corpus/sections/sec-1-1" replace />} />
+          <Route path="/corpus" element={<Navigate to="/corpus/sections/sec-1-1" replace />} />
+          <Route
+            path="/corpus/sections/:sectionId"
+            element={
+              <CorpusRouteWrapper
+                chapters={chapters}
+                isLoadingChapters={isLoadingChapters}
+                onOpenPdfPage={openPdfPage}
+                onReviewSubmit={handleReviewSubmit}
+              />
+            }
+          />
+          <Route
+            path="/corpus/items/:itemId"
+            element={
+              <CorpusRouteWrapper
+                chapters={chapters}
+                isLoadingChapters={isLoadingChapters}
+                onOpenPdfPage={openPdfPage}
+                onReviewSubmit={handleReviewSubmit}
+              />
+            }
+          />
+          <Route
+            path="/queue"
+            element={
+              <QueueRouteWrapper
+                queue={reviewQueue}
+                isLoadingQueue={isLoadingQueue}
+                onRefreshQueue={loadQueue}
+                onReviewSubmit={handleReviewSubmit}
+              />
+            }
+          />
+          <Route
+            path="/export"
+            element={<ExportView samples={verifiedSamples} isLoading={isLoadingExport} />}
+          />
+        </Routes>
+      </main>
+
+      {/* PDF Document Viewer Modal */}
+      <PdfViewerModal
+        isOpen={isPdfOpen}
+        onClose={closePdf}
+        initialPage={pdfPage}
+        documentId={pdfDoc}
+      />
+    </div>
+  );
+};
+
+// Sub-component wrapper for Section and Item Corpus Routes
+const CorpusRouteWrapper: React.FC<{
+  chapters: ChapterHierarchy[];
+  isLoadingChapters: boolean;
+  onOpenPdfPage: (page: number, docId?: string) => void;
+  onReviewSubmit: (linkId: string, submission: ReviewSubmission) => Promise<void>;
+}> = ({ chapters, isLoadingChapters, onOpenPdfPage, onReviewSubmit }) => {
+  const navigate = useNavigate();
+  const { sectionId, itemId } = useParams<{ sectionId?: string; itemId?: string }>();
+
+  const [sectionItems, setSectionItems] = useState<AssessmentItem[]>([]);
+  const [selectedItem, setSelectedItem] = useState<AssessmentItem | null>(null);
+  const [isLoadingItems, setIsLoadingItems] = useState<boolean>(false);
+  const [activeSectionId, setActiveSectionId] = useState<string>(sectionId || 'sec-1-1');
+
+  // Load items for section
+  useEffect(() => {
+    const secToLoad = sectionId || activeSectionId;
+    if (secToLoad) {
+      setActiveSectionId(secToLoad);
+      setIsLoadingItems(true);
+      fetchSectionItems(secToLoad)
+        .then(setSectionItems)
+        .catch(console.error)
+        .finally(() => setIsLoadingItems(false));
+    }
+  }, [sectionId]);
+
+  // Load item detail modal if itemId parameter is in URL
+  useEffect(() => {
+    if (itemId) {
+      fetchItem(itemId)
+        .then((item) => {
+          setSelectedItem(item);
+          if (item.section_id && item.section_id !== activeSectionId) {
+            setActiveSectionId(item.section_id);
+            fetchSectionItems(item.section_id).then(setSectionItems).catch(console.error);
+          }
+        })
+        .catch(console.error);
+    } else {
+      setSelectedItem(null);
+    }
+  }, [itemId]);
+
+  const handleSelectSection = (secId: string) => {
+    navigate(`/corpus/sections/${secId}`);
+  };
+
+  const handleSelectItem = (item: AssessmentItem) => {
+    navigate(`/corpus/items/${item.id}`);
+  };
+
+  const handleCloseItemModal = () => {
+    navigate(`/corpus/sections/${activeSectionId}`);
+  };
+
+  return (
+    <>
+      <CorpusView
+        chapters={chapters}
+        selectedSectionId={activeSectionId}
+        onSelectSection={handleSelectSection}
+        sectionItems={sectionItems}
+        onSelectItem={handleSelectItem}
+        isLoading={isLoadingChapters || isLoadingItems}
+      />
+
+      {selectedItem && (
+        <SampleDetailView
+          item={selectedItem}
+          onClose={handleCloseItemModal}
+          onReviewSubmit={onReviewSubmit}
+          onOpenPdfPage={onOpenPdfPage}
+        />
+      )}
+    </>
+  );
+};
+
+// Sub-component wrapper for Queue Route
+const QueueRouteWrapper: React.FC<{
+  queue: ItemAnswerLink[];
+  isLoadingQueue: boolean;
+  onRefreshQueue: (status?: string) => Promise<void>;
+  onReviewSubmit: (linkId: string, submission: ReviewSubmission) => Promise<void>;
+}> = ({ queue, isLoadingQueue, onRefreshQueue, onReviewSubmit }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const statusFilter = searchParams.get('status') || '';
+
+  const handleStatusFilterChange = (newStatus: string) => {
+    if (newStatus) {
+      setSearchParams({ status: newStatus });
+    } else {
+      setSearchParams({});
+    }
+  };
+
+  useEffect(() => {
+    onRefreshQueue(statusFilter || undefined);
+  }, [statusFilter]);
+
+  return (
+    <ReviewQueueView
+      queue={queue}
+      selectedStatus={statusFilter}
+      onStatusFilterChange={handleStatusFilterChange}
+      onReviewSubmit={onReviewSubmit}
+      isLoading={isLoadingQueue}
+    />
+  );
+};
+
+export default App;

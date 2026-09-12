@@ -1,4 +1,19 @@
+# Virtual environments & Python bytecode
 .venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Node / JS dependencies and build outputs
+node_modules/
+**/node_modules/
+
+# SQLite databases & local data state
+*.db
+*.sqlite
+*.sqlite3
+
+# OS & IDE metadata
+.DS_Store
 .codex-finalizer/
 pptx/node_modules
-.DS_Store

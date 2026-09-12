@@ -1,0 +1,484 @@
+{
+  "document": {
+    "title": "Elementary Algebra 2e",
+    "edition": "2nd Edition",
+    "file_checksum": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "page_count": 1290,
+    "license": "CC BY 4.0"
+  },
+  "pages": [
+    {
+      "id": "page-1",
+      "page_number": 15,
+      "image_path": "/static/pages/page_15.png"
+    },
+    {
+      "id": "page-2",
+      "page_number": 42,
+      "image_path": "/static/pages/page_42.png"
+    },
+    {
+      "id": "page-3",
+      "page_number": 88,
+      "image_path": "/static/pages/page_88.png"
+    },
+    {
+      "id": "page-4",
+      "page_number": 104,
+      "image_path": "/static/pages/page_104.png"
+    }
+  ],
+  "source_spans": [
+    {
+      "id": "span-ch1",
+      "page_id": "page-1",
+      "text_content": "Chapter 1: Foundations",
+      "reading_order": 1,
+      "bbox_json": "{\"x0\": 50, \"y0\": 50, \"x1\": 500, \"y1\": 80}",
+      "extraction_metadata_json": "{\"confidence\": 0.99, \"font\": \"Helvetica-Bold\", \"size\": 24}"
+    },
+    {
+      "id": "span-sec1-1",
+      "page_id": "page-1",
+      "text_content": "Section 1.1: Introduction to Whole Numbers",
+      "reading_order": 2,
+      "bbox_json": "{\"x0\": 50, \"y0\": 100, \"x1\": 450, \"y1\": 125}",
+      "extraction_metadata_json": "{\"confidence\": 0.98, \"font\": \"Helvetica-Bold\", \"size\": 18}"
+    },
+    {
+      "id": "span-q1-prompt",
+      "page_id": "page-1",
+      "text_content": "1. Solve for x: 2x + 5 = 15",
+      "reading_order": 3,
+      "bbox_json": "{\"x0\": 60, \"y0\": 150, \"x1\": 400, \"y1\": 170}",
+      "extraction_metadata_json": "{\"confidence\": 0.97, \"parser\": \"pdfplumber\"}"
+    },
+    {
+      "id": "span-q1-ans",
+      "page_id": "page-1",
+      "text_content": "Answer 1: x = 5",
+      "reading_order": 50,
+      "bbox_json": "{\"x0\": 60, \"y0\": 800, \"x1\": 200, \"y1\": 815}",
+      "extraction_metadata_json": "{\"confidence\": 0.99, \"parser\": \"pdfplumber\"}"
+    },
+    {
+      "id": "span-ex1-4",
+      "page_id": "page-1",
+      "text_content": "Worked Example 1.4: Simplify 3(x + 4) - 2x",
+      "reading_order": 4,
+      "bbox_json": "{\"x0\": 60, \"y0\": 200, \"x1\": 480, \"y1\": 225}",
+      "extraction_metadata_json": "{\"confidence\": 0.99, \"parser\": \"pdfplumber\"}"
+    },
+    {
+      "id": "span-ex1-4-ans",
+      "page_id": "page-1",
+      "text_content": "Solution: 3x + 12 - 2x = x + 12",
+      "reading_order": 5,
+      "bbox_json": "{\"x0\": 80, \"y0\": 230, \"x1\": 450, \"y1\": 250}",
+      "extraction_metadata_json": "{\"confidence\": 0.99, \"parser\": \"pdfplumber\"}"
+    },
+    {
+      "id": "span-sec1-2",
+      "page_id": "page-2",
+      "text_content": "Section 1.2: Use the Language of Algebra",
+      "reading_order": 1,
+      "bbox_json": "{\"x0\": 50, \"y0\": 100, \"x1\": 450, \"y1\": 125}",
+      "extraction_metadata_json": "{\"confidence\": 0.98}"
+    },
+    {
+      "id": "span-q5-prompt",
+      "page_id": "page-2",
+      "text_content": "5. Evaluate 3^3 + 2",
+      "reading_order": 12,
+      "bbox_json": "{\"x0\": 60, \"y0\": 300, \"x1\": 350, \"y1\": 320}",
+      "extraction_metadata_json": "{\"confidence\": 0.92}"
+    },
+    {
+      "id": "span-q5-ans",
+      "page_id": "page-2",
+      "text_content": "Answer 5: 29",
+      "reading_order": 80,
+      "bbox_json": "{\"x0\": 60, \"y0\": 850, \"x1\": 200, \"y1\": 865}",
+      "extraction_metadata_json": "{\"confidence\": 0.85}"
+    },
+    {
+      "id": "span-ch2",
+      "page_id": "page-3",
+      "text_content": "Chapter 2: Solving Linear Equations",
+      "reading_order": 1,
+      "bbox_json": "{\"x0\": 50, \"y0\": 50, \"x1\": 520, \"y1\": 80}",
+      "extraction_metadata_json": "{\"confidence\": 0.99}"
+    },
+    {
+      "id": "span-sec2-1",
+      "page_id": "page-3",
+      "text_content": "Section 2.1: Solve Equations Using Addition and Subtraction",
+      "reading_order": 2,
+      "bbox_json": "{\"x0\": 50, \"y0\": 100, \"x1\": 500, \"y1\": 125}",
+      "extraction_metadata_json": "{\"confidence\": 0.98}"
+    },
+    {
+      "id": "span-q10-prompt",
+      "page_id": "page-3",
+      "text_content": "10. Factor each difference of squares:",
+      "reading_order": 15,
+      "bbox_json": "{\"x0\": 60, \"y0\": 350, \"x1\": 450, \"y1\": 370}",
+      "extraction_metadata_json": "{\"confidence\": 0.96}"
+    },
+    {
+      "id": "span-q10a-prompt",
+      "page_id": "page-3",
+      "text_content": "(a) x^2 - 9",
+      "reading_order": 16,
+      "bbox_json": "{\"x0\": 80, \"y0\": 375, \"x1\": 250, \"y1\": 390}",
+      "extraction_metadata_json": "{\"confidence\": 0.95}"
+    },
+    {
+      "id": "span-q10b-prompt",
+      "page_id": "page-3",
+      "text_content": "(b) x^2 - 4",
+      "reading_order": 17,
+      "bbox_json": "{\"x0\": 80, \"y0\": 395, \"x1\": 250, \"y1\": 410}",
+      "extraction_metadata_json": "{\"confidence\": 0.95}"
+    },
+    {
+      "id": "span-q10c-prompt",
+      "page_id": "page-3",
+      "text_content": "(c) x^2 - 16",
+      "reading_order": 18,
+      "bbox_json": "{\"x0\": 80, \"y0\": 415, \"x1\": 250, \"y1\": 430}",
+      "extraction_metadata_json": "{\"confidence\": 0.94}"
+    },
+    {
+      "id": "span-q10a-ans",
+      "page_id": "page-3",
+      "text_content": "10a. (x - 3)(x + 3)",
+      "reading_order": 90,
+      "bbox_json": "{\"x0\": 60, \"y0\": 880, \"x1\": 250, \"y1\": 895}",
+      "extraction_metadata_json": "{\"confidence\": 0.95}"
+    },
+    {
+      "id": "span-q10b-ans",
+      "page_id": "page-3",
+      "text_content": "10b. (x - 2)(x + 2)",
+      "reading_order": 91,
+      "bbox_json": "{\"x0\": 60, \"y0\": 896, \"x1\": 250, \"y1\": 911}",
+      "extraction_metadata_json": "{\"confidence\": 0.88}"
+    },
+    {
+      "id": "span-q10c-ans",
+      "page_id": "page-3",
+      "text_content": "10c. (x - 4)(x + 4)",
+      "reading_order": 92,
+      "bbox_json": "{\"x0\": 60, \"y0\": 912, \"x1\": 250, \"y1\": 927}",
+      "extraction_metadata_json": "{\"confidence\": 0.60}"
+    },
+    {
+      "id": "span-sec2-2",
+      "page_id": "page-4",
+      "text_content": "Section 2.2: Solve Equations Using Multiplication and Division",
+      "reading_order": 1,
+      "bbox_json": "{\"x0\": 50, \"y0\": 100, \"x1\": 520, \"y1\": 125}",
+      "extraction_metadata_json": "{\"confidence\": 0.98}"
+    },
+    {
+      "id": "span-q14-prompt",
+      "page_id": "page-4",
+      "text_content": "14. Solve 3x - 6 = 12",
+      "reading_order": 10,
+      "bbox_json": "{\"x0\": 60, \"y0\": 250, \"x1\": 350, \"y1\": 270}",
+      "extraction_metadata_json": "{\"confidence\": 0.96}"
+    },
+    {
+      "id": "span-q14-ans-wrong",
+      "page_id": "page-4",
+      "text_content": "14. x = 10",
+      "reading_order": 75,
+      "bbox_json": "{\"x0\": 60, \"y0\": 820, \"x1\": 180, \"y1\": 835}",
+      "extraction_metadata_json": "{\"confidence\": 0.70}"
+    },
+    {
+      "id": "span-q14-ans-correct",
+      "page_id": "page-4",
+      "text_content": "14. x = 6",
+      "reading_order": 76,
+      "bbox_json": "{\"x0\": 60, \"y0\": 836, \"x1\": 180, \"y1\": 851}",
+      "extraction_metadata_json": "{\"confidence\": 0.99}"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "chap-1",
+      "chapter_number": 1,
+      "title": "Foundations",
+      "source_span_id": "span-ch1"
+    },
+    {
+      "id": "chap-2",
+      "chapter_number": 2,
+      "title": "Solving Linear Equations",
+      "source_span_id": "span-ch2"
+    }
+  ],
+  "sections": [
+    {
+      "id": "sec-1-1",
+      "chapter_id": "chap-1",
+      "section_number": "1.1",
+      "title": "Introduction to Whole Numbers",
+      "source_span_id": "span-sec1-1"
+    },
+    {
+      "id": "sec-1-2",
+      "chapter_id": "chap-1",
+      "section_number": "1.2",
+      "title": "Use the Language of Algebra",
+      "source_span_id": "span-sec1-2"
+    },
+    {
+      "id": "sec-2-1",
+      "chapter_id": "chap-2",
+      "section_number": "2.1",
+      "title": "Solve Equations Using Addition and Subtraction",
+      "source_span_id": "span-sec2-1"
+    },
+    {
+      "id": "sec-2-2",
+      "chapter_id": "chap-2",
+      "section_number": "2.2",
+      "title": "Solve Equations Using Multiplication and Division",
+      "source_span_id": "span-sec2-2"
+    }
+  ],
+  "assessment_items": [
+    {
+      "id": "item-q1",
+      "section_id": "sec-1-1",
+      "parent_item_id": null,
+      "item_label": "Question 1",
+      "item_type": "question",
+      "content_text": "Solve for x: 2x + 5 = 15",
+      "ordering": 1,
+      "source_span_id": "span-q1-prompt"
+    },
+    {
+      "id": "item-ex1-4",
+      "section_id": "sec-1-1",
+      "parent_item_id": null,
+      "item_label": "Example 1.4",
+      "item_type": "worked_example",
+      "content_text": "Worked Example 1.4: Simplify 3(x + 4) - 2x",
+      "ordering": 2,
+      "source_span_id": "span-ex1-4"
+    },
+    {
+      "id": "item-q5",
+      "section_id": "sec-1-2",
+      "parent_item_id": null,
+      "item_label": "Question 5",
+      "item_type": "question",
+      "content_text": "Evaluate 3^3 + 2",
+      "ordering": 5,
+      "source_span_id": "span-q5-prompt"
+    },
+    {
+      "id": "item-q10",
+      "section_id": "sec-2-1",
+      "parent_item_id": null,
+      "item_label": "Exercise 10",
+      "item_type": "question",
+      "content_text": "Factor each difference of squares:",
+      "ordering": 10,
+      "source_span_id": "span-q10-prompt"
+    },
+    {
+      "id": "item-q14",
+      "section_id": "sec-2-2",
+      "parent_item_id": null,
+      "item_label": "Question 14",
+      "item_type": "question",
+      "content_text": "Solve 3x - 6 = 12",
+      "ordering": 14,
+      "source_span_id": "span-q14-prompt"
+    }
+  ],
+  "assessment_parts": [
+    {
+      "id": "part-10a",
+      "item_id": "item-q10",
+      "part_label": "a",
+      "content_text": "x^2 - 9",
+      "ordering": 1,
+      "source_span_id": "span-q10a-prompt"
+    },
+    {
+      "id": "part-10b",
+      "item_id": "item-q10",
+      "part_label": "b",
+      "content_text": "x^2 - 4",
+      "ordering": 2,
+      "source_span_id": "span-q10b-prompt"
+    },
+    {
+      "id": "part-10c",
+      "item_id": "item-q10",
+      "part_label": "c",
+      "content_text": "x^2 - 16",
+      "ordering": 3,
+      "source_span_id": "span-q10c-prompt"
+    }
+  ],
+  "answer_entries": [
+    {
+      "id": "ans-q1",
+      "answer_label": "1",
+      "content_text": "x = 5",
+      "source_span_id": "span-q1-ans"
+    },
+    {
+      "id": "ans-ex1-4",
+      "answer_label": "Ex 1.4 Solution",
+      "content_text": "Solution: 3x + 12 - 2x = x + 12",
+      "source_span_id": "span-ex1-4-ans"
+    },
+    {
+      "id": "ans-q5",
+      "answer_label": "5",
+      "content_text": "29",
+      "source_span_id": "span-q5-ans"
+    },
+    {
+      "id": "ans-q10a",
+      "answer_label": "10a",
+      "content_text": "(x - 3)(x + 3)",
+      "source_span_id": "span-q10a-ans"
+    },
+    {
+      "id": "ans-q10b",
+      "answer_label": "10b",
+      "content_text": "(x - 2)(x + 2)",
+      "source_span_id": "span-q10b-ans"
+    },
+    {
+      "id": "ans-q10c",
+      "answer_label": "10c",
+      "content_text": "(x - 4)(x + 4)",
+      "source_span_id": "span-q10c-ans"
+    },
+    {
+      "id": "ans-q14-wrong",
+      "answer_label": "14 (Candidate)",
+      "content_text": "x = 10",
+      "source_span_id": "span-q14-ans-wrong"
+    },
+    {
+      "id": "ans-q14-correct",
+      "answer_label": "14 (Correct)",
+      "content_text": "x = 6",
+      "source_span_id": "span-q14-ans-correct"
+    }
+  ],
+  "item_answer_links": [
+    {
+      "id": "link-q1",
+      "item_id": "item-q1",
+      "part_id": null,
+      "answer_id": "ans-q1",
+      "method": "parser_exact",
+      "confidence": 0.99,
+      "current_status": "verified"
+    },
+    {
+      "id": "link-ex1-4",
+      "item_id": "item-ex1-4",
+      "part_id": null,
+      "answer_id": "ans-ex1-4",
+      "method": "textbook_inline",
+      "confidence": 1.0,
+      "current_status": "verified"
+    },
+    {
+      "id": "link-q5",
+      "item_id": "item-q5",
+      "part_id": null,
+      "answer_id": "ans-q5",
+      "method": "parser_heuristic",
+      "confidence": 0.85,
+      "current_status": "candidate"
+    },
+    {
+      "id": "link-q10a",
+      "item_id": null,
+      "part_id": "part-10a",
+      "answer_id": "ans-q10a",
+      "method": "parser_exact",
+      "confidence": 0.95,
+      "current_status": "verified"
+    },
+    {
+      "id": "link-q10b",
+      "item_id": null,
+      "part_id": "part-10b",
+      "answer_id": "ans-q10b",
+      "method": "parser_heuristic",
+      "confidence": 0.88,
+      "current_status": "candidate"
+    },
+    {
+      "id": "link-q10c",
+      "item_id": null,
+      "part_id": "part-10c",
+      "answer_id": "ans-q10c",
+      "method": "parser_ambiguous",
+      "confidence": 0.60,
+      "current_status": "needs_resolution"
+    },
+    {
+      "id": "link-q14",
+      "item_id": "item-q14",
+      "part_id": null,
+      "answer_id": "ans-q14-correct",
+      "method": "human_corrected",
+      "confidence": 1.0,
+      "current_status": "verified"
+    }
+  ],
+  "review_events": [
+    {
+      "id": "rev-1",
+      "link_id": "link-q1",
+      "action": "accept",
+      "actor": "reviewer_alice",
+      "timestamp": "2026-09-12T10:00:00Z",
+      "rationale": "Verified exact match with answer key on page 15.",
+      "target_answer_id": null
+    },
+    {
+      "id": "rev-2",
+      "link_id": "link-ex1-4",
+      "action": "accept",
+      "actor": "reviewer_alice",
+      "timestamp": "2026-09-12T10:05:00Z",
+      "rationale": "Instructional worked example verified.",
+      "target_answer_id": null
+    },
+    {
+      "id": "rev-3",
+      "link_id": "link-q14",
+      "action": "reject",
+      "actor": "reviewer_bob",
+      "timestamp": "2026-09-12T10:30:00Z",
+      "rationale": "Parser extracted wrong candidate answer 'x = 10'.",
+      "target_answer_id": null
+    },
+    {
+      "id": "rev-4",
+      "link_id": "link-q14",
+      "action": "correct",
+      "actor": "reviewer_bob",
+      "timestamp": "2026-09-12T10:32:00Z",
+      "rationale": "Relinked to correct answer entry 'x = 6' and marked verified.",
+      "target_answer_id": "ans-q14-correct"
+    }
+  ]
+}
