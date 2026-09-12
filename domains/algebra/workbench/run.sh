@@ -24,6 +24,17 @@ echo "Initializing/verifying database seed..."
 python -m app.db.seed
 cd "$WORKBENCH_DIR"
 
-# Launch Uvicorn server
-echo "Starting Algebra EKC Workbench server at http://localhost:8000..."
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --app-dir backend
+# Cleanup background processes on exit
+cleanup() {
+    echo "Shutting down backend and frontend dev servers..."
+    kill $(jobs -p) 2>/dev/null || true
+}
+trap cleanup EXIT INT TERM
+
+# Launch Uvicorn backend server in background
+echo "Starting FastAPI Backend server at http://localhost:8000..."
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --app-dir backend &
+
+# Launch Vite frontend dev server
+echo "Starting Vite Live Dev server at http://localhost:5173..."
+cd frontend && npm run dev
