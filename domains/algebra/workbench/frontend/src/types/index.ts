@@ -131,3 +131,12 @@ export interface IngestStatus {
   current_section_title?: string;
   error_message?: string;
 }
+
+export interface DocumentInfo {
+  id: string;
+  title: string;
+  file_checksum?: string;
+  ingested_pages_count: number;
+  ingested_pages: number[];
+  total_pages: number;
+}

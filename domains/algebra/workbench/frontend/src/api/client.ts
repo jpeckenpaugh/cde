@@ -6,7 +6,8 @@ import {
   VerifiedSampleExport,
   SourcePdf,
   IngestRequest,
-  IngestStatus
+  IngestStatus,
+  DocumentInfo
 } from '../types';
 
 const API_BASE = '/api';
@@ -77,5 +78,11 @@ export async function triggerIngest(req: IngestRequest): Promise<{ message: stri
 export async function fetchIngestStatus(): Promise<IngestStatus> {
   const res = await fetch(`${API_BASE}/documents/ingest/status`);
   if (!res.ok) throw new Error('Failed to fetch ingestion status');
+  return res.json();
+}
+
+export async function fetchDocumentInfo(documentId: string = 'active'): Promise<DocumentInfo> {
+  const res = await fetch(`${API_BASE}/documents/${encodeURIComponent(documentId)}/info`);
+  if (!res.ok) throw new Error('Failed to fetch document info');
   return res.json();
 }

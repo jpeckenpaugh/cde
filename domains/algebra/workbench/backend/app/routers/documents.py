@@ -73,10 +73,44 @@ def trigger_document_ingestion(payload: IngestRequestSchema, background_tasks: B
 def get_ingestion_status():
     return ingestion_progress_tracker.get_status()
 
+@router.get("/active/info")
+@router.get("/{document_id}/info")
+def get_document_info(document_id: str = "active", db: Session = Depends(get_db)):
+    if document_id == "active" or document_id == "1":
+        doc = db.query(Document).first()
+    else:
+        doc = db.query(Document).filter(Document.id == document_id).first()
+
+    if not doc:
+        doc = db.query(Document).first()
+
+    if not doc:
+        return {
+            "id": "1",
+            "title": "No Document Ingested",
+            "ingested_pages_count": 0,
+            "ingested_pages": [],
+            "total_pages": 0
+        }
+
+    pages = db.query(Page).filter(Page.document_id == doc.id).order_by(Page.page_number).all()
+    ingested_page_numbers = sorted(list(set(p.page_number for p in pages)))
+
+    return {
+        "id": doc.id,
+        "title": doc.title,
+        "file_checksum": doc.file_checksum,
+        "ingested_pages_count": len(ingested_page_numbers),
+        "ingested_pages": ingested_page_numbers,
+        "total_pages": doc.page_count or len(ingested_page_numbers)
+    }
+
 @router.get("/{document_id}/pdf")
 def get_document_pdf(document_id: str, db: Session = Depends(get_db)):
     doc = db.query(Document).filter(Document.id == document_id).first()
-    
+    if not doc:
+        doc = db.query(Document).first()
+
     # Try finding PDF in SOURCES_DIR
     pdf_filename = "elementary-algebra-2e_-_WEB.pdf"
     pdf_path = SOURCES_DIR / pdf_filename
@@ -102,8 +136,16 @@ def get_document_pdf(document_id: str, db: Session = Depends(get_db)):
 
 @router.get("/{document_id}/pages/{page_num}/pdf")
 def get_single_page_pdf(document_id: str, page_num: int, db: Session = Depends(get_db)):
-    doc = db.query(Document).filter(Document.id == document_id).first()
-    page = db.query(Page).filter(Page.document_id == document_id, Page.page_number == page_num).first()
+    if document_id == "active" or document_id == "1":
+        doc = db.query(Document).first()
+    else:
+        doc = db.query(Document).filter(Document.id == document_id).first()
+
+    if not doc:
+        doc = db.query(Document).first()
+
+    doc_id = doc.id if doc else document_id
+    page = db.query(Page).filter(Page.document_id == doc_id, Page.page_number == page_num).first()
 
     pdf_file_path = None
     if page and page.pdf_artifact_path:
