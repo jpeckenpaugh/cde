@@ -49,7 +49,7 @@ export const CorpusView: React.FC<CorpusViewProps> = ({
                 >
                   <div className="flex items-center space-x-2 font-semibold text-xs text-gray-100">
                     <ChevronRight className={`w-4 h-4 text-blue-400 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
-                    <span>Chapter {ch.chapter_number}: {ch.title}</span>
+                    <span>{ch.title.startsWith('Chapter') ? ch.title : `Chapter ${ch.chapter_number}: ${ch.title}`}</span>
                   </div>
                 </button>
 
@@ -68,7 +68,7 @@ export const CorpusView: React.FC<CorpusViewProps> = ({
                           }`}
                         >
                           <div className="font-semibold mb-1 flex items-center justify-between">
-                            <span>Sec {sec.section_number}: {sec.title}</span>
+                            <span>{sec.title}</span>
                           </div>
 
                           <div className="flex items-center space-x-2 text-[10px] text-gray-400 mt-1">

@@ -14,7 +14,12 @@ def get_chapters(db: Session = Depends(get_db)):
 
     for ch in chapters:
         sections_out = []
-        sections = db.query(Section).filter(Section.chapter_id == ch.id).order_by(Section.section_number).all()
+        raw_sections = db.query(Section).filter(Section.chapter_id == ch.id).all()
+        # Sort using natural numeric key (e.g. 3.2 before 3.10)
+        def natural_sort_key(s: Section):
+            parts = s.section_number.split(".")
+            return [int(p) if p.isdigit() else p for p in parts]
+        sections = sorted(raw_sections, key=natural_sort_key)
 
         for sec in sections:
             # Query all links for items or parts in this section
