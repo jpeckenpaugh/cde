@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Set Theory Refresher</title>
+<style>
+  body {
+    font-family: 'Segoe UI', 'Cambria Math', 'Times New Roman', serif;
+    font-size: 12pt;
+    line-height: 1.45;
+    margin: 1in;
+  }
+  h1 {
+    font-size: 20pt;
+    margin-bottom: 4pt;
+  }
+  h2 {
+    font-size: 14pt;
+    margin-top: 18pt;
+    margin-bottom: 6pt;
+    border-bottom: 1px solid #999;
+    padding-bottom: 2pt;
+  }
+  h3 {
+    font-size: 12pt;
+    margin-top: 12pt;
+    margin-bottom: 4pt;
+  }
+  p, li {
+    margin-top: 4pt;
+    margin-bottom: 4pt;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8pt;
+    margin-bottom: 12pt;
+  }
+  th, td {
+    border: 1px solid #000;
+    padding: 5pt;
+    vertical-align: top;
+    text-align: left;
+  }
+  th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  .math {
+    font-family: 'Cambria Math', 'Segoe UI Symbol', serif;
+  }
+  .note {
+    font-style: italic;
+    color: #444;
+  }
+</style>
+</head>
+<body>
+
+<h1>Set Theory Refresher</h1>
+<p class="note">A Self-Contained Document</p>
+
+<h2>1. Premise</h2>
+
+<p>Let the universal set be</p>
+<p class="math"><b>U</b> = {0, 1, 2, …, 30}</p>
+
+<p>Define two subsets of <b>U</b>:</p>
+<p class="math"><b>A</b> = {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20}</p>
+<p class="math"><b>B</b> = {0, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30}</p>
+
+<p>In words:</p>
+<ul>
+  <li><b>A</b> is the set of even numbers from 0 to 20.</li>
+  <li><b>B</b> is the set of multiples of 3 from 0 to 30.</li>
+</ul>
+
+<p>All set operations below use this same universal set <b>U</b>, set <b>A</b>, and set <b>B</b>.</p>
+
+<h2>2. Core Set Vocabulary</h2>
+
+<ul>
+  <li><b>Element:</b> <span class="math">x ∈ A</span> means <i>x</i> is in set <i>A</i>.</li>
+  <li><b>Not an element:</b> <span class="math">x ∉ A</span> means <i>x</i> is not in set <i>A</i>.</li>
+  <li><b>Subset:</b> <span class="math">A ⊆ B</span> means every element of <i>A</i> is also in <i>B</i>.</li>
+  <li><b>Empty set:</b> <span class="math">∅</span> is the set with no elements.</li>
+  <li><b>Cardinality:</b> <span class="math">|A|</span> is the number of elements in <i>A</i>.</li>
+</ul>
+
+<p>Examples:</p>
+<p class="math">2 ∈ A, &nbsp; 3 ∈ B, &nbsp; 2 ∉ B, &nbsp; 3 ∉ A</p>
+
+<p>Neither <span class="math">A ⊆ B</span> nor <span class="math">B ⊆ A</span>.</p>
+
+<h2>3. Cardinalities</h2>
+
+<p class="math">|U| = 31</p>
+<p class="math">|A| = 11</p>
+<p class="math">|B| = 11</p>
+
+<p>Inclusion–exclusion principle:</p>
+<p class="math">|A ∪ B| = |A| + |B| − |A ∩ B|</p>
+
+<h2>4. Set Operations and Results</h2>
+
+<h3>4.1 Union</h3>
+<p class="math">A ∪ B = {x : x ∈ A or x ∈ B}</p>
+<p class="math">A ∪ B = {0, 2, 3, 4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 27, 30}</p>
+<p class="math">|A ∪ B| = 18</p>
+
+<h3>4.2 Intersection</h3>
+<p class="math">A ∩ B = {x : x ∈ A and x ∈ B}</p>
+<p>The common elements are multiples of both 2 and 3, i.e. multiples of 6:</p>
+<p class="math">A ∩ B = {0, 6, 12, 18}</p>
+<p class="math">|A ∩ B| = 4</p>
+
+<h3>4.3 Complement</h3>
+<p class="math">A<sup>c</sup> = U \ A</p>
+<p class="math">A<sup>c</sup> = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30}</p>
+
+<p class="math">B<sup>c</sup> = U \ B</p>
+<p class="math">B<sup>c</sup> = {1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17, 19, 20, 22, 23, 25, 26, 28, 29}</p>
+
+<h3>4.4 Set Difference</h3>
+<p class="math">A \ B = {x : x ∈ A and x ∉ B}</p>
+<p class="math">A \ B = {2, 4, 8, 10, 14, 16, 20}</p>
+<p class="math">B \ A = {3, 9, 15, 21, 24, 27, 30}</p>
+
+<h3>4.5 Symmetric Difference</h3>
+<p class="math">A Δ B = (A \ B) ∪ (B \ A)</p>
+<p class="math">A Δ B = {2, 3, 4, 8, 9, 10, 14, 15, 16, 20, 21, 24, 27, 30}</p>
+<p>These are the elements in exactly one of <i>A</i> or <i>B</i>, but not both.</p>
+
+<h3>4.6 De Morgan’s Laws</h3>
+<p class="math">(A ∪ B)<sup>c</sup> = A<sup>c</sup> ∩ B<sup>c</sup></p>
+<p class="math">(A ∩ B)<sup>c</sup> = A<sup>c</sup> ∪ B<sup>c</sup></p>
+
+<p>For this example:</p>
+<p class="math">(A ∪ B)<sup>c</sup> = {1, 5, 7, 11, 13, 17, 19, 22, 23, 25, 26, 28, 29}</p>
+<p class="math">(A ∩ B)<sup>c</sup> = {1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30}</p>
+
+<h2>5. Venn Diagram Summary</h2>
+
+<ul>
+  <li><b>Only in A:</b> <span class="math">{2, 4, 8, 10, 14, 16, 20}</span></li>
+  <li><b>Only in B:</b> <span class="math">{3, 9, 15, 21, 24, 27, 30}</span></li>
+  <li><b>In both A and B:</b> <span class="math">{0, 6, 12, 18}</span></li>
+  <li><b>In neither A nor B:</b> <span class="math">{1, 5, 7, 11, 13, 17, 19, 22, 23, 25, 26, 28, 29}</span></li>
+</ul>
+
+<h2>6. Quick Reference Table</h2>
+
+<table>
+  <tr>
+    <th>Operation</th>
+    <th>Notation</th>
+    <th>Result</th>
+    <th>Cardinality</th>
+  </tr>
+  <tr>
+    <td>Union</td>
+    <td class="math">A ∪ B</td>
+    <td class="math">{0, 2, 3, 4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24, 27, 30}</td>
+    <td>18</td>
+  </tr>
+  <tr>
+    <td>Intersection</td>
+    <td class="math">A ∩ B</td>
+    <td class="math">{0, 6, 12, 18}</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>A minus B</td>
+    <td class="math">A \ B</td>
+    <td class="math">{2, 4, 8, 10, 14, 16, 20}</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>B minus A</td>
+    <td class="math">B \ A</td>
+    <td class="math">{3, 9, 15, 21, 24, 27, 30}</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>Symmetric difference</td>
+    <td class="math">A Δ B</td>
+    <td class="math">{2, 3, 4, 8, 9, 10, 14, 15, 16, 20, 21, 24, 27, 30}</td>
+    <td>14</td>
+  </tr>
+  <tr>
+    <td>Complement of A</td>
+    <td class="math">A<sup>c</sup></td>
+    <td class="math">{1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30}</td>
+    <td>20</td>
+  </tr>
+  <tr>
+    <td>Complement of B</td>
+    <td class="math">B<sup>c</sup></td>
+    <td class="math">{1, 2, 4, 5, 7, 8, 10, 11, 13, 14, 16, 17, 19, 20, 22, 23, 25, 26, 28, 29}</td>
+    <td>20</td>
+  </tr>
+  <tr>
+    <td>Complement of union</td>
+    <td class="math">(A ∪ B)<sup>c</sup></td>
+    <td class="math">{1, 5, 7, 11, 13, 17, 19, 22, 23, 25, 26, 28, 29}</td>
+    <td>13</td>
+  </tr>
+  <tr>
+    <td>Complement of intersection</td>
+    <td class="math">(A ∩ B)<sup>c</sup></td>
+    <td class="math">{1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30}</td>
+    <td>27</td>
+  </tr>
+</table>
+
+<p class="note">This document contains all necessary definitions, sets, operations, and results. No external references are required.</p>
+
+</body>
+</html>
