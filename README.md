@@ -243,6 +243,8 @@ The graph contains no untyped transitions, non-terminating circular dependencies
 
 A critical failure mode of deep language models is generating factually correct terminal answers $Y$ through invalid, hallucinatory, or circular reasoning chains $C$.
 
+> **Illustrative stress test.** A small adversarial noise-injection experiment documented distinct failure patterns in Gemini, ChatGPT, and DeepSeek when challenged to rationalize incoherent arithmetic premises. It is a motivating qualitative example, not a controlled validation of CDE: [Epistemic Failure Analysis: Noise-Injection Stress Test on Three Frontier Models](docs/experiment_Epistemic_Failure_Analysis_of_3_Frontier_Models.pdf).
+
 ### 4.1 Structural Dependency on the Input Transducer
 
 The epistemic integrity layer protects against inferential corruption **downstream of concept extraction**. It evaluates the structural validity of the active opcode configuration $\mathcal{C}$ and its transitions to terminal state $Y$.
