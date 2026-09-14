@@ -42,7 +42,7 @@ $$
 Allow only addition and subtraction:
 
 $$
-X = \{(a,\operatorname{op},b) \mid a,b \in U,\ \operatorname{op}\in\{+,-\}\}
+X = \{(a,\mathrm{op},b) \mid a,b \in U,\ \mathrm{op}\in\{+,-\}\}
 $$
 
 Each member of `X` is a structured question, not an ambiguous sentence. For example:
@@ -71,17 +71,17 @@ The minimal concept set tracks the operand roles and operation:
 
 $$
 C =
-\{\texttt{ADD},\texttt{SUBTRACT}\}
+\{\text{ADD},\text{SUBTRACT}\}
 \cup
-\{\texttt{LEFT\_}n \mid n\in U\}
+\{\text{LEFT-}n \mid n\in U\}
 \cup
-\{\texttt{RIGHT\_}n \mid n\in U\}
+\{\text{RIGHT-}n \mid n\in U\}
 $$
 
 For the question `(7, +, 2)`, the DIS activates:
 
 $$
-C(7,+,2)=\{\texttt{LEFT\_7},\texttt{ADD},\texttt{RIGHT\_2}\}
+C(7,+,2)=\{\text{LEFT-7},\text{ADD},\text{RIGHT-2}\}
 $$
 
 Those concepts license exactly this transition:
@@ -119,7 +119,7 @@ U=\{0,1,2,\dots,20\}
 $$
 
 $$
-X=\{(a,\operatorname{op},b) \mid a,b\in U,\ \operatorname{op}\in\{+,-,\times,\div\}\}
+X=\{(a,\mathrm{op},b) \mid a,b\in U,\ \mathrm{op}\in\{+,-,\times,\div\}\}
 $$
 
 There are 21 choices for each operand and 4 operations:
@@ -141,7 +141,7 @@ This universe permits integer outputs only. Fractions and remainders are not rep
 $$
 Y=Y_{\text{integer}}
 \cup
-\{\texttt{NON\_WHOLE\_RESULT},\texttt{UNDEFINED\_DIVISION}\}
+\{\text{NON-WHOLE-RESULT},\text{UNDEFINED-DIVISION}\}
 $$
 
 - `NON_WHOLE_RESULT` means that the arithmetic result is valid, but it is not an integer.
@@ -153,11 +153,11 @@ The DIS now needs concepts for the new operators and guards for division:
 
 $$
 C=
-\{\texttt{ADD},\texttt{SUBTRACT},\texttt{MULTIPLY},\texttt{DIVIDE}\}
+\{\text{ADD},\text{SUBTRACT},\text{MULTIPLY},\text{DIVIDE}\}
 \cup
-\{\texttt{LEFT\_}n,\texttt{RIGHT\_}n \mid n\in U\}
+\{\text{LEFT-}n,\text{RIGHT-}n \mid n\in U\}
 \cup
-\{\texttt{DIVISOR\_NONZERO},\texttt{ZERO\_DIVISOR},\texttt{DIVIDES\_EVENLY},\texttt{NON\_WHOLE\_QUOTIENT}\}
+\{\text{DIVISOR-NONZERO},\text{ZERO-DIVISOR},\text{DIVIDES-EVENLY},\text{NON-WHOLE-QUOTIENT}\}
 $$
 
 The guard concepts are derived by validation. They determine which division transition is permitted.
@@ -174,14 +174,14 @@ $$
 For a nonzero divisor that does not divide evenly:
 
 $$
-(a,\div,b)\rightarrow\texttt{NON\_WHOLE\_RESULT}
+(a,\div,b)\rightarrow\text{NON-WHOLE-RESULT}
 \quad\text{when } b\neq0 \text{ and } b\nmid a
 $$
 
 For division by zero:
 
 $$
-(a,\div,0)\rightarrow\texttt{UNDEFINED\_DIVISION}
+(a,\div,0)\rightarrow\text{UNDEFINED-DIVISION}
 $$
 
 ### 10. Example: evaluating `3 / 2`
@@ -195,7 +195,7 @@ $$
 The system activates the input and operation concepts:
 
 $$
-\{\texttt{LEFT\_3},\texttt{DIVIDE},\texttt{RIGHT\_2}\}
+\{\text{LEFT-3},\text{DIVIDE},\text{RIGHT-2}\}
 $$
 
 It then validates the division:
@@ -211,7 +211,7 @@ $$
 The result is not an integer, so the licensed transition is:
 
 $$
-(3,\div,2)\rightarrow\texttt{NON\_WHOLE\_RESULT}
+(3,\div,2)\rightarrow\text{NON-WHOLE-RESULT}
 $$
 
 This does not assert that division is impossible. Ordinary arithmetic gives:
