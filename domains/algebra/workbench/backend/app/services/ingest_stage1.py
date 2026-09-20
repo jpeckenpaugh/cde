@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import re
 import uuid
 import shutil
 import hashlib
@@ -393,31 +394,71 @@ def run_stage1_ingestion(
         # 4. TOC / Bookmarks Indexing
         toc = pdf_doc.get_toc()
         if toc:
+            parsed_toc = []
+            for idx, item in enumerate(toc):
+                level, title, start_p = item[0], item[1], item[2]
+                end_p = total_pages
+                for nxt in toc[idx+1:]:
+                    if nxt[0] <= level:
+                        end_p = max(start_p, nxt[2] - 1)
+                        break
+                if end_p == total_pages and idx + 1 < len(toc):
+                    end_p = max(start_p, toc[idx+1][2] - 1)
+                parsed_toc.append({
+                    "level": level,
+                    "title": title,
+                    "start_page": start_p,
+                    "end_page": end_p
+                })
+
             current_chapter = None
-            for item in toc:
-                level, title, target_page = item[0], item[1], item[2]
+            current_ch_num = 0
+            for item in parsed_toc:
+                level, title = item["level"], item["title"]
+                start_p, end_p = item["start_page"], item["end_page"]
+
                 if level == 1:
-                    # Chapter
-                    chap_no = len(document.chapters) + 1
-                    chap_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc_checksum}:chapter:{chap_no}:{title}"))
+                    # Chapter / Front-matter / Back-matter
+                    ch_match = re.search(r'Chapter\s+(\d+)\s*(.*)', title, re.IGNORECASE)
+                    if ch_match:
+                        chap_no = int(ch_match.group(1))
+                        clean_title = f"Chapter {chap_no}: {ch_match.group(2).strip()}" if ch_match.group(2) else title
+                        current_ch_num = chap_no
+                    else:
+                        chap_no = 0
+                        clean_title = title
+                        current_ch_num = 0
+
+                    chap_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc_checksum}:chapter:{chap_no}:{clean_title}"))
                     current_chapter = Chapter(
                         id=chap_id,
                         document_id=document.id,
                         chapter_number=chap_no,
-                        title=title
+                        title=clean_title,
+                        start_page=start_p,
+                        end_page=end_p
                     )
                     db.add(current_chapter)
                     db.commit()
                     db.refresh(current_chapter)
                 elif level >= 2 and current_chapter:
                     # Section
-                    sec_no = f"{current_chapter.chapter_number}.{len(current_chapter.sections) + 1}"
-                    sec_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc_checksum}:section:{sec_no}:{title}"))
+                    sec_match = re.search(r'^(\d+\.\d+)\s*(.*)', title)
+                    if sec_match:
+                        sec_no = sec_match.group(1)
+                        clean_sec_title = f"{sec_no} {sec_match.group(2).strip()}"
+                    else:
+                        sec_no = f"{current_ch_num}.{len(current_chapter.sections) + 1}"
+                        clean_sec_title = title
+
+                    sec_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc_checksum}:section:{sec_no}:{clean_sec_title}"))
                     sec = Section(
                         id=sec_id,
                         chapter_id=current_chapter.id,
                         section_number=sec_no,
-                        title=title
+                        title=clean_sec_title,
+                        start_page=start_p,
+                        end_page=end_p
                     )
                     db.add(sec)
                     db.commit()

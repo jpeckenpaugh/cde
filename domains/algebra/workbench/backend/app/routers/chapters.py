@@ -53,6 +53,8 @@ def get_chapters(db: Session = Depends(get_db)):
                 chapter_id=sec.chapter_id,
                 section_number=sec.section_number,
                 title=sec.title,
+                start_page=sec.start_page,
+                end_page=sec.end_page,
                 candidate_count=counts["candidate"],
                 reviewed_count=counts["reviewed"],
                 verified_count=counts["verified"],
@@ -65,6 +67,8 @@ def get_chapters(db: Session = Depends(get_db)):
             id=ch.id,
             chapter_number=ch.chapter_number,
             title=ch.title,
+            start_page=ch.start_page,
+            end_page=ch.end_page,
             sections=sections_out
         )
         result.append(ch_schema)

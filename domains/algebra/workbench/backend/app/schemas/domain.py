@@ -80,6 +80,8 @@ class SectionSummarySchema(BaseModel):
     chapter_id: str
     section_number: str
     title: str
+    start_page: Optional[int] = None
+    end_page: Optional[int] = None
     candidate_count: int = 0
     reviewed_count: int = 0
     verified_count: int = 0
@@ -92,6 +94,8 @@ class ChapterHierarchySchema(BaseModel):
     id: str
     chapter_number: int
     title: str
+    start_page: Optional[int] = None
+    end_page: Optional[int] = None
     sections: List[SectionSummarySchema] = []
 
 class ReviewSubmissionSchema(BaseModel):

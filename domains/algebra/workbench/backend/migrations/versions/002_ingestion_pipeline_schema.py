@@ -42,12 +42,20 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id')
     )
 
-    # 3. Add expanded columns to pages
+    # 3. Add expanded columns to pages, chapters, and sections
     with op.batch_alter_table('pages') as batch_op:
         batch_op.add_column(sa.Column('page_checksum', sa.String(), nullable=True))
         batch_op.add_column(sa.Column('pdf_artifact_path', sa.String(), nullable=True))
         batch_op.add_column(sa.Column('image_artifact_path', sa.String(), nullable=True))
         batch_op.add_column(sa.Column('page_type_classification', sa.String(), nullable=True))
+
+    with op.batch_alter_table('chapters') as batch_op:
+        batch_op.add_column(sa.Column('start_page', sa.Integer(), nullable=True))
+        batch_op.add_column(sa.Column('end_page', sa.Integer(), nullable=True))
+
+    with op.batch_alter_table('sections') as batch_op:
+        batch_op.add_column(sa.Column('start_page', sa.Integer(), nullable=True))
+        batch_op.add_column(sa.Column('end_page', sa.Integer(), nullable=True))
 
     # 4. Add ingestion_run_id to candidate tables with named foreign keys
     with op.batch_alter_table('assessment_items') as batch_op:

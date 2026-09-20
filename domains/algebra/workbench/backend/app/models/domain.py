@@ -83,6 +83,8 @@ class Chapter(Base):
     document_id = Column(String, ForeignKey("documents.id", ondelete="CASCADE"), nullable=False)
     chapter_number = Column(Integer, nullable=False)
     title = Column(String, nullable=False)
+    start_page = Column(Integer, nullable=True)
+    end_page = Column(Integer, nullable=True)
     source_span_id = Column(String, ForeignKey("source_spans.id", ondelete="SET NULL"), nullable=True)
 
     document = relationship("Document", back_populates="chapters")
@@ -96,6 +98,8 @@ class Section(Base):
     chapter_id = Column(String, ForeignKey("chapters.id", ondelete="CASCADE"), nullable=False)
     section_number = Column(String, nullable=False)
     title = Column(String, nullable=False)
+    start_page = Column(Integer, nullable=True)
+    end_page = Column(Integer, nullable=True)
     source_span_id = Column(String, ForeignKey("source_spans.id", ondelete="SET NULL"), nullable=True)
 
     chapter = relationship("Chapter", back_populates="sections")

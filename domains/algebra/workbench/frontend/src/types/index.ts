@@ -71,6 +71,8 @@ export interface SectionSummary {
   chapter_id: string;
   section_number: string;
   title: string;
+  start_page?: number;
+  end_page?: number;
   candidate_count: number;
   reviewed_count: number;
   verified_count: number;
@@ -82,6 +84,8 @@ export interface ChapterHierarchy {
   id: string;
   chapter_number: number;
   title: string;
+  start_page?: number;
+  end_page?: number;
   sections: SectionSummary[];
 }
 
